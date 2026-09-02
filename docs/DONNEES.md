@@ -123,6 +123,33 @@ Les répliques génériques (pools par situation × personnage × palier de chut
 traducteur d'erreurs Python → français vivent dans des fichiers communs, pas dans les
 fiches (sinon recopiés dans 50 salles).
 
+## Domaine 2 — Données du joueur
+
+### Le slot de sauvegarde — validé le 2026-09-02
+
+```
+Slot (1, 2 ou 3)
+├── nom du joueur, créé le, dernier jeu le, temps de jeu total
+├── position : chapitre courant + salle courante (cible de « Reprendre »)
+└── pour chaque salle visitée :
+    ├── statut      : en cours │ validée
+    ├── code        : le dernier écrit, conservé même après validation (CONCEPTION §8.5)
+    ├── chutes      : compteur
+    ├── temps passé
+    ├── fraise      : obtenue ou non
+    └── indices     : palier atteint (0-3), pour ne jamais re-payer un indice vu
+```
+
+**On ne stocke jamais ce qui se calcule** : % d'ascension, stats par chapitre
+(salles X/Y, chutes cumulées…) dérivent des salles. **Pourquoi :** une donnée stockée
+en double finit toujours par diverger de sa source (« le slot dit 40 %, la carte 43 % »).
+
+### Réglages : globaux — validé le 2026-09-02
+
+Langue, volume, taille de police vivent au niveau de l'app, pas du slot.
+**Pourquoi :** standard des jeux console (dont Celeste) ; l'écran titre connaît la
+langue avant le choix du slot ; un joueur multi-slots ne règle rien deux fois.
+
 ## Questions ouvertes
 
 1. Détail fin des champs : Contrainte (vocabulaire des règles), pools de répliques, traducteur d'erreurs
