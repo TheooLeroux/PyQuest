@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { retour, t } from '../jeu/etat.svelte';
+  import { fiches } from '../contenu/catalogue';
+  import { partie } from '../jeu/partie.svelte';
+  import SalleContenu from './SalleContenu.svelte';
 
-  function surTouche(e: KeyboardEvent) {
-    if (e.key === 'Escape') retour();
-  }
+  const fiche = $derived(fiches.find((f) => f.id === partie.salleId));
 </script>
 
-<svelte:window onkeydown={surTouche} />
-
-<main class="ecran">
-  <h1>{t('salle.titre')}</h1>
-  <p class="panneau">🧗 {t('salle.enConstruction')}</p>
-  <p class="aide">{t('salle.aide')}</p>
-</main>
+{#if fiche}
+  <!-- Changer de salle recrée tout l'écran (éditeur et console compris). -->
+  {#key fiche.id}
+    <SalleContenu {fiche} />
+  {/key}
+{/if}

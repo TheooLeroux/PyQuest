@@ -39,6 +39,7 @@ export function effacerSlot(numero: number): void {
 
 export function enregistrerPartie(): void {
   if (partie.slot && partie.numeroSlot > 0) {
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity -- Date jetable, converti aussitôt en texte
     partie.slot.dernierJeuLe = new Date().toISOString();
     sauverSlot(localStorage, partie.numeroSlot, $state.snapshot(partie.slot) as Slot);
   }
