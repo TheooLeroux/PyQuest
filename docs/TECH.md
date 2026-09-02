@@ -46,9 +46,22 @@ pas de la coquille. **Garde-fou :** valider tôt (dès l'étape 0-1) que SharedA
 pressentie, pour ne pas découvrir un blocage à l'étape 3. Penchant indicatif de Claude :
 Tauri (léger, voie mobile).
 
+### 3. Langage & framework UI : TypeScript strict + Vite + Svelte 5 — validé le 2026-09-02
+
+**Pourquoi :**
+- **TypeScript strict** : Théo en connaît un peu ; le typage attrape les bugs avant
+  l'exécution. **Vite** : standard de facto (dev server + build), rechargement instantané.
+- **Svelte 5** (contre React et vanilla TS) : le plus lisible pour le niveau de Théo
+  (~4 concepts : `$state`, `$props`, `$derived`, blocs de template), léger et compilé
+  (esprit « jeu léger »), réactivité fine sans re-rendus surprises — cohabite bien avec
+  des scènes canvas impératives ; CSS scopé et état global inclus (pas de décisions
+  annexes à prendre). Moins assumés : écosystème plus petit (impact faible : quasi aucun
+  composant tiers prévu), compétence moins transférable que React, syntaxe runes récente.
+- Les scènes de jeu (carte 3D, salle 2D) restent du code canvas impératif **hors**
+  framework ; Svelte ne gère que écrans, panneaux et menus.
+
 ## Questions ouvertes (l'arbre restant, dans l'ordre)
 
-1. Framework UI et langage (TypeScript pressenti)
 3. Rendu : carte 3D (Three.js pressenti), scène 2D de la salle (Canvas/PixiJS/DOM)
 4. Architecture d'exécution du Python joueur (worker, timeout, input, tests)
 5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md)
