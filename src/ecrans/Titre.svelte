@@ -155,8 +155,8 @@
     position: absolute;
     right: 1.4rem;
     bottom: 1.2rem;
-    opacity: 0.35;
-    font-size: 0.75em;
+    opacity: 0.6;
+    font-size: 0.85em;
     color: #b8a5df;
   }
 </style>
