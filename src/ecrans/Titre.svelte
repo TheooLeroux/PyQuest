@@ -71,6 +71,7 @@
   </div>
 
   <span class="version">{VERSION}</span>
+  <span class="disclaimer">{t('titre.disclaimer')}</span>
 </main>
 
 <style>
@@ -147,6 +148,15 @@
     bottom: 1.2rem;
     opacity: 0.45;
     font-size: 0.8em;
+    color: #b8a5df;
+  }
+
+  .disclaimer {
+    position: absolute;
+    right: 1.4rem;
+    bottom: 1.2rem;
+    opacity: 0.35;
+    font-size: 0.75em;
     color: #b8a5df;
   }
 </style>

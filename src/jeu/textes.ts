@@ -1,5 +1,6 @@
 const fr = {
   'titre.appuie': 'Appuie sur une touche',
+  'titre.disclaimer': 'Jeu de fan non commercial — non affilié à EXOK Games',
   'titre.jouer': 'Jouer',
   'titre.options': 'Options',
   'titre.credits': 'Crédits',
@@ -21,7 +22,12 @@ const fr = {
   'options.aide': 'Échap retour',
 
   'credits.titre': 'Crédits',
-  'credits.texte': 'PyQuest — un hommage à Celeste (Maddy Makes Games).',
+  'credits.texte': 'PyQuest — un jeu de fan, hommage à Celeste.',
+  'credits.celeste':
+    'Celeste, son univers et ses assets sont la propriété de Maddy Makes Games, Inc. (EXOK Games).',
+  'credits.musique': 'Musique originale de Celeste : Lena Raine (éditée par Materia Collective).',
+  'credits.disclaimer':
+    'Projet strictement non commercial, ni développé, ni approuvé, ni affilié à EXOK Games. Tout asset sera retiré sur simple demande d’un ayant droit.',
   'credits.aide': 'Échap retour',
 
   'carte.titre': 'Le mont PyQuest',
@@ -57,6 +63,7 @@ export type CleTexte = keyof typeof fr;
 
 const en: Record<CleTexte, string> = {
   'titre.appuie': 'Press any key',
+  'titre.disclaimer': 'Non-commercial fan game — not affiliated with EXOK Games',
   'titre.jouer': 'Play',
   'titre.options': 'Options',
   'titre.credits': 'Credits',
@@ -78,7 +85,12 @@ const en: Record<CleTexte, string> = {
   'options.aide': 'Esc back',
 
   'credits.titre': 'Credits',
-  'credits.texte': 'PyQuest — a tribute to Celeste (Maddy Makes Games).',
+  'credits.texte': 'PyQuest — a fan game, tribute to Celeste.',
+  'credits.celeste':
+    'Celeste, its universe and its assets are the property of Maddy Makes Games, Inc. (EXOK Games).',
+  'credits.musique': 'Original Celeste music: Lena Raine (published by Materia Collective).',
+  'credits.disclaimer':
+    'Strictly non-commercial project, neither developed, approved, nor affiliated with EXOK Games. Any asset will be removed upon request from a rights holder.',
   'credits.aide': 'Esc back',
 
   'carte.titre': 'Mount PyQuest',
