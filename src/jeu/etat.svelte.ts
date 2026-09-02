@@ -7,6 +7,9 @@ export const etat = $state({
   ecran: 'titre' as Ecran,
   // D'où Options/Crédits ont été ouverts, pour y revenir à l'Échap.
   ecranPrecedent: 'titre' as Ecran,
+  // Mémoire de l'écran titre : revenir des Options ramène au menu, pas au logo.
+  phaseTitre: 'logo' as 'logo' | 'menu',
+  indexTitre: 0,
   reglages: chargerReglages(localStorage),
 });
 

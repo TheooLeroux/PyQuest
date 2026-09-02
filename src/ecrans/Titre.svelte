@@ -7,9 +7,6 @@
 
   const VERSION = 'v.0.1.0';
 
-  let phase: 'logo' | 'menu' = $state('logo');
-  let index = $state(0);
-
   const actions = [
     { cle: 'titre.jouer', faire: () => aller('sauvegardes') },
     { cle: 'titre.options', faire: () => aller('options') },
@@ -19,33 +16,31 @@
 
   $effect(() => {
     // Tentative de musique dès l'arrivée ; si le navigateur exige un geste,
-    // la prochaine touche pressée la lancera (silence si fichier absent).
+    // le premier (touche ou clic, capté par App) la lancera.
     jouerMusiqueTitre(etat.reglages.volume);
   });
 
   function surTouche(e: KeyboardEvent) {
-    jouerMusiqueTitre(etat.reglages.volume);
-
-    if (phase === 'logo') {
+    if (etat.phaseTitre === 'logo') {
       jouerSon('valider');
-      phase = 'menu';
+      etat.phaseTitre = 'menu';
       e.preventDefault();
       return;
     }
     if (e.key === 'ArrowUp') {
       jouerSon('menuHaut');
-      index = (index + actions.length - 1) % actions.length;
+      etat.indexTitre = (etat.indexTitre + actions.length - 1) % actions.length;
       e.preventDefault();
     } else if (e.key === 'ArrowDown') {
       jouerSon('menuBas');
-      index = (index + 1) % actions.length;
+      etat.indexTitre = (etat.indexTitre + 1) % actions.length;
       e.preventDefault();
     } else if (e.key === 'Enter') {
       jouerSon('valider');
-      actions[index].faire();
+      actions[etat.indexTitre].faire();
     } else if (e.key === 'Escape') {
       jouerSon('retour');
-      phase = 'logo';
+      etat.phaseTitre = 'logo';
     }
   }
 </script>
@@ -58,15 +53,16 @@
   <div class="scene">
     <LogoPyQuest />
 
-    {#if phase === 'logo'}
+    {#if etat.phaseTitre === 'logo'}
       <p class="appuie">{t('titre.appuie')}</p>
     {:else}
       <ul class="menu">
         {#each actions as action, i (action.cle)}
-          <li class={i === index ? 'actif' : ''}>
+          <li class={i === etat.indexTitre ? 'actif' : ''}>
             <button
               onclick={() => {
-                index = i;
+                etat.indexTitre = i;
+                jouerSon('valider');
                 action.faire();
               }}>{t(action.cle)}</button
             >
@@ -140,15 +136,12 @@
     cursor: pointer;
     border-radius: 6px;
     letter-spacing: 0.08em;
+    position: relative;
   }
 
   .menu .actif button {
     background: rgba(224, 76, 106, 0.18);
     color: var(--rose);
-  }
-
-  .menu button {
-    position: relative;
   }
 
   .menu button::before {
