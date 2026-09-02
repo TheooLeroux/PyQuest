@@ -39,9 +39,13 @@ pour ne pas ressembler à un site web.
 
 Tauri v2 et Electron restent en lice ; on développe en pur web (navigateur) et on
 tranche au plus tard à l'étape 3 (habillage). **Pourquoi :** ~95 % du code ne dépend
-pas de la coquille. **Garde-fou :** valider tôt (dès l'étape 0-1) que SharedArrayBuffer
+pas de la coquille. **Garde-fous :** valider tôt (dès l'étape 0-1) que SharedArrayBuffer
 (nécessaire à `input()` synchrone et à l'interruption) fonctionne dans la coquille
-pressentie, pour ne pas découvrir un blocage à l'étape 3. Penchant indicatif : Tauri
+pressentie, pour ne pas découvrir un blocage à l'étape 3. Configurer aussi la
+politique d'autoplay du moteur web (Electron : `autoplayPolicy`, Tauri : argument
+WebView2) pour que la musique démarre sans geste utilisateur — la restriction
+n'existe que dans les navigateurs. Les builds se font en local : les assets de
+`public/musiques/` (non versionnés) n'existent pas sur un runner CI. Penchant indicatif : Tauri
 (léger, voie mobile intégrée).
 
 ### 3. Langage & framework UI : TypeScript strict + Vite + Svelte 5 — validé le 2026-09-02
