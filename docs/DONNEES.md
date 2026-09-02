@@ -1,8 +1,8 @@
 # PyQuest — Modèle de données
 
-> Chantier ③ du pré-code, entamé le 2026-09-02. Démarche : modèle **conceptuel**
-> d'abord (entités, relations, pourquoi), stockage physique ensuite. Chaque décision
-> est actée avec son pourquoi ; rien n'est « validé » sans le feu vert de Théo.
+> Le modèle de données du jeu : d'abord le modèle **conceptuel** (entités, relations),
+> puis le stockage physique. Chaque décision est datée et accompagnée de son pourquoi.
+> Complète [`TECH.md`](TECH.md) et les docs de conception.
 
 ## Vue d'ensemble : trois domaines — validé le 2026-09-02
 

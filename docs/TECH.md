@@ -1,8 +1,8 @@
 # PyQuest — Choix techniques
 
-> Chantier ② du pré-code, entamé le 2026-09-02. Chaque décision est actée **avec son
-> pourquoi** ; rien n'est marqué « validé » sans le feu vert explicite de Théo.
-> Le comparatif s'appuie sur une recherche web du 2026-09-02, pas sur des souvenirs.
+> Complète les docs de conception (qui restent pur produit). Chaque décision est datée
+> et accompagnée de son pourquoi. Les comparatifs s'appuient sur l'état des
+> technologies vérifié en septembre 2026 (sources en ligne, versions à jour).
 
 ## Décisions actées
 
@@ -29,9 +29,7 @@ Python 3.14 en 2026, activement maintenu).
 - Précédents du genre : JOY OF PROGRAMMING et CodeCombat ont pris un runtime de code +
   UI riche ; The Farmer Was Replaced (Unity) a dû renoncer au vrai Python — exactement
   ce que refuse le §1 de la conception.
-- Théo connaît un peu TypeScript (et un peu Python) : il pourra lire le code.
-- C'est la stack où Claude produit le code le plus fiable et peut vérifier
-  visuellement son travail en boucle courte.
+- TypeScript et Python sont déjà un peu pratiqués : le code restera lisible.
 
 **Risque assumé :** le game feel (animations, particules, caméra) est à fabriquer à la
 main — c'est l'étape 3 de la roadmap, attaquable par itérations. Discipline requise
@@ -40,23 +38,24 @@ pour ne pas ressembler à un site web.
 ### 2. Coquille desktop : choix reporté — décidé le 2026-09-02
 
 Tauri v2 et Electron restent en lice ; on développe en pur web (navigateur) et on
-tranchera au plus tard à l'étape 3 (habillage). **Pourquoi :** ~95 % du code ne dépend
+tranche au plus tard à l'étape 3 (habillage). **Pourquoi :** ~95 % du code ne dépend
 pas de la coquille. **Garde-fou :** valider tôt (dès l'étape 0-1) que SharedArrayBuffer
 (nécessaire à `input()` synchrone et à l'interruption) fonctionne dans la coquille
-pressentie, pour ne pas découvrir un blocage à l'étape 3. Penchant indicatif de Claude :
-Tauri (léger, voie mobile).
+pressentie, pour ne pas découvrir un blocage à l'étape 3. Penchant indicatif : Tauri
+(léger, voie mobile intégrée).
 
 ### 3. Langage & framework UI : TypeScript strict + Vite + Svelte 5 — validé le 2026-09-02
 
 **Pourquoi :**
-- **TypeScript strict** : Théo en connaît un peu ; le typage attrape les bugs avant
-  l'exécution. **Vite** : standard de facto (dev server + build), rechargement instantané.
-- **Svelte 5** (contre React et vanilla TS) : le plus lisible pour le niveau de Théo
-  (~4 concepts : `$state`, `$props`, `$derived`, blocs de template), léger et compilé
-  (esprit « jeu léger »), réactivité fine sans re-rendus surprises — cohabite bien avec
-  des scènes canvas impératives ; CSS scopé et état global inclus (pas de décisions
-  annexes à prendre). Moins assumés : écosystème plus petit (impact faible : quasi aucun
-  composant tiers prévu), compétence moins transférable que React, syntaxe runes récente.
+- **TypeScript strict** : le typage attrape les bugs avant l'exécution ; déjà un peu
+  pratiqué. **Vite** : standard de facto (dev server + build), rechargement instantané.
+- **Svelte 5** (contre React et vanilla TS) : le plus lisible pour un développeur
+  TypeScript débutant (~4 concepts : `$state`, `$props`, `$derived`, blocs de
+  template), léger et compilé (esprit « jeu léger »), réactivité fine sans re-rendus
+  surprises — cohabite bien avec des scènes canvas impératives ; CSS scopé et état
+  global inclus (pas de décisions annexes à prendre). Moins assumés : écosystème plus
+  petit (impact faible : quasi aucun composant tiers prévu), compétence moins
+  transférable que React, syntaxe runes récente.
 - Les scènes de jeu (carte 3D, salle 2D) restent du code canvas impératif **hors**
   framework ; Svelte ne gère que écrans, panneaux et menus.
 
@@ -64,14 +63,14 @@ Tauri (léger, voie mobile).
 
 **Pourquoi :**
 - **Three.js** pour la montagne 3D (contre Babylon.js) : la référence du 3D web,
-  léger, recettes connues pour low-poly/flat shading/brume/billboards, meilleure
-  maîtrise de Claude. À écrire nous-mêmes : caméra sur rails et transitions (raisonnable).
+  léger, communauté immense, recettes connues pour low-poly/flat shading/brume/
+  billboards. À écrire nous-mêmes : caméra sur rails et transitions (raisonnable).
   Babylon écarté : plus lourd, et ses atouts (physique, XR, PBR) sont inutiles ici.
 - **PixiJS** pour la scène 2D de la salle (contre Canvas 2D natif et tout-Three) :
   moteur 2D WebGL fait pour sprites/spritesheets/particules/filtres — l'écran où
   « ça ressemble à un jeu, pas à un IDE » (risque n°4 de la conception) se gagne ;
   mauvais endroit pour économiser une dépendance. Canvas 2D écarté (mini-moteur maison
-  à écrire, chaque effet devient un chantier, perfs CPU) ; tout-Three écarté (2D
+  à écrire, chaque effet visuel coûte cher, perfs CPU) ; tout-Three écarté (2D
   pixel-perfect dans un outil 3D = combat permanent).
 - Coût assumé : deux renderers dans le projet — acceptable, ils ne se croisent jamais
   (un par écran).
@@ -91,16 +90,17 @@ Tauri (léger, voie mobile).
   (destruction/relance du worker) si le buffer est indisponible. **Pourquoi :** les
   boucles infinies seront fréquentes chez les débutants ; « réapparition instantanée »
   oblige ; méthode documentée par Pyodide. Requiert les en-têtes COOP/COEP (une ligne
-  dans Vite ; à re-valider dans la coquille — garde-fou déjà acté en décision 2).
+  dans Vite ; à re-valider dans la coquille — garde-fou de la décision 2).
 
 ### 6. Outillage qualité : Vitest + ESLint + Prettier + svelte-check — validé le 2026-09-02
 
 **Pourquoi :** standards de l'écosystème Vite/Svelte, zéro débat de style (formatage
-automatique). Vitest ciblera d'abord le cœur critique : comparateur de sortie,
-normalisation, vérificateur de contraintes, progression. Vérifications exécutées par
-Claude avant chaque commit.
+automatique). Vitest cible d'abord le cœur critique : comparateur de sortie,
+normalisation, vérificateur de contraintes, progression. Vérifications exécutées
+avant chaque commit.
 
-## Questions ouvertes (l'arbre restant)
-5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md, chantier ③)
-7. Packaging & distribution (installateur) — lié à la coquille, reporté (décision 2) ;
+## Questions ouvertes
+
+1. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md)
+2. Packaging & distribution (installateur) — lié à la coquille, reporté (décision 2) ;
    Registre = post-MVP, schéma serveur le moment venu
