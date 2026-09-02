@@ -179,7 +179,7 @@ Cordée                                  ← le « compte » (WORLDBUILDING)
 
 **Pourquoi :** l'ascension gravée EST le fichier de save local — le serveur ne fait que
 le conserver ; pas de second modèle à maintenir, la sync est une copie de fichier.
-Schéma détaillé et techno serveur : à décider quand le Registre entrera en chantier.
+Schéma détaillé et techno serveur : à décider quand le développement du Registre commencera.
 
 ## Questions ouvertes
 
