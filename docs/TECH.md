@@ -76,8 +76,25 @@ Tauri (léger, voie mobile).
 - Coût assumé : deux renderers dans le projet — acceptable, ils ne se croisent jamais
   (un par écran).
 
+### 5. Exécution du Python joueur — validé le 2026-09-02
+
+- **Pyodide dans un Web Worker dédié** : l'UI ne gèle jamais, même si le code du
+  joueur boucle à l'infini. Protocole de messages maison, léger.
+- **`input()` scripté par les tests** : chaque jeu de test fournit ses entrées
+  d'avance, la console les rejoue visuellement. **Pourquoi :** simple, déterministe
+  (la validation l'exige de toute façon), conforme aux §4/§7 de la conception.
+  L'interactif temps réel (SharedArrayBuffer bloquant) est écarté pour le MVP —
+  complexité sans bénéfice de validation — mais le protocole worker réserve un
+  message « demande d'entrée » pour le mode bac à sable post-MVP.
+- **Timeout ~5 s, arrêt à deux étages** : interrupt buffer Pyodide (SharedArrayBuffer
+  → vrai `KeyboardInterrupt`, arrêt instantané et pédagogique) + filet universel
+  (destruction/relance du worker) si le buffer est indisponible. **Pourquoi :** les
+  boucles infinies seront fréquentes chez les débutants ; « réapparition instantanée »
+  oblige ; méthode documentée par Pyodide. Requiert les en-têtes COOP/COEP (une ligne
+  dans Vite ; à re-valider dans la coquille — garde-fou déjà acté en décision 2).
+
 ## Questions ouvertes (l'arbre restant, dans l'ordre)
-4. Architecture d'exécution du Python joueur (worker, timeout, input, tests)
-5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md)
-6. Outillage : build, tests, lint
-7. Packaging & distribution (installateur) ; Registre = post-MVP, schéma serveur plus tard
+5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md, chantier ③)
+6. Outillage : tests, lint (proposition en cours)
+7. Packaging & distribution (installateur) — lié à la coquille, reporté (décision 2) ;
+   Registre = post-MVP, schéma serveur le moment venu
