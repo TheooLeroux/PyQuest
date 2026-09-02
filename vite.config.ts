@@ -13,5 +13,7 @@ export default defineConfig({
   plugins: [svelte()],
   server: { headers: entetesIsolation },
   preview: { headers: entetesIsolation },
+  worker: { format: 'es' },
+  optimizeDeps: { exclude: ['pyodide'] },
   test: { environment: 'node' },
 });

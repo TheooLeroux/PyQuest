@@ -1,6 +1,7 @@
 # Dépendances et build
 node_modules/
 dist/
+public/pyodide/
 
 # IDE
 .idea/
