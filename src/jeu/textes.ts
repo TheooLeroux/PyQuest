@@ -1,4 +1,5 @@
 const fr = {
+  'titre.appuie': 'Appuie sur une touche',
   'titre.jouer': 'Jouer',
   'titre.options': 'Options',
   'titre.credits': 'Crédits',
@@ -55,6 +56,7 @@ const fr = {
 export type CleTexte = keyof typeof fr;
 
 const en: Record<CleTexte, string> = {
+  'titre.appuie': 'Press any key',
   'titre.jouer': 'Play',
   'titre.options': 'Options',
   'titre.credits': 'Credits',

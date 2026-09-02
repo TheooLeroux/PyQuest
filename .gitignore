@@ -3,6 +3,9 @@ node_modules/
 dist/
 public/pyodide/
 
+# Assets privés (musiques, sprites) — jamais dans le dépôt public
+public/musiques/
+
 # IDE
 .idea/
 .vscode/
