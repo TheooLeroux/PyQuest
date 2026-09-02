@@ -25,20 +25,20 @@
   });
 
   $effect(() => {
-    reglerVolumeMusique(etat.reglages.volume);
+    reglerVolumeMusique(etat.reglages.volumeMusique);
   });
 
   $effect(() => {
     // La musique est continue sur tous les écrans ; elle se met en pause dans
     // la salle (concentration) et reprend où elle en était en sortant.
     if (etat.ecran === 'salle') mettreMusiqueEnPause();
-    else jouerMusiqueTitre(etat.reglages.volume);
+    else jouerMusiqueTitre(etat.reglages.volumeMusique);
   });
 
   // Le navigateur interdit le son avant le premier geste (clic ou touche) :
   // on saisit le tout premier, où qu'il ait lieu, pour lancer la musique.
   function relancerMusique() {
-    if (etat.ecran !== 'salle') jouerMusiqueTitre(etat.reglages.volume);
+    if (etat.ecran !== 'salle') jouerMusiqueTitre(etat.reglages.volumeMusique);
   }
 </script>
 

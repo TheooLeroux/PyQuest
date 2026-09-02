@@ -17,7 +17,7 @@
   $effect(() => {
     // Tentative de musique dès l'arrivée ; si le navigateur exige un geste,
     // le premier (touche ou clic, capté par App) la lancera.
-    jouerMusiqueTitre(etat.reglages.volume);
+    jouerMusiqueTitre(etat.reglages.volumeMusique);
   });
 
   function surTouche(e: KeyboardEvent) {

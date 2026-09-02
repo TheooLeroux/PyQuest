@@ -24,9 +24,23 @@ describe('chargerReglages', () => {
     expect(chargerReglages(stockage)).toEqual({ ...REGLAGES_DEFAUT, langue: 'en' });
   });
 
+  it('migre l’ancien volume unique vers les deux volumes', () => {
+    const stockage = fauxStockage({ 'pyquest.reglages': '{"volume":30}' });
+    expect(chargerReglages(stockage)).toEqual({
+      ...REGLAGES_DEFAUT,
+      volumeMusique: 30,
+      volumeEffets: 30,
+    });
+  });
+
   it('relit ce que sauverReglages a écrit', () => {
     const stockage = fauxStockage();
-    const reglages: Reglages = { langue: 'en', volume: 30, taillePolice: 'grande' };
+    const reglages: Reglages = {
+      langue: 'en',
+      volumeMusique: 30,
+      volumeEffets: 55,
+      taillePolice: 'grande',
+    };
     sauverReglages(stockage, reglages);
     expect(chargerReglages(stockage)).toEqual(reglages);
   });

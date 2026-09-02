@@ -33,7 +33,7 @@ export function jouerSon(nom: NomSon): void {
       audio = new Audio(`/sons/${FICHIERS[nom]}.ogg`);
       cache.set(nom, audio);
     }
-    audio.volume = Math.max(0, Math.min(1, etat.reglages.volume / 100));
+    audio.volume = Math.max(0, Math.min(1, etat.reglages.volumeEffets / 100));
     audio.currentTime = 0;
     audio.play().catch(() => {});
   } catch {
