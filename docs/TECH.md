@@ -37,10 +37,18 @@ Python 3.14 en 2026, activement maintenu).
 main — c'est l'étape 3 de la roadmap, attaquable par itérations. Discipline requise
 pour ne pas ressembler à un site web.
 
+### 2. Coquille desktop : choix reporté — décidé le 2026-09-02
+
+Tauri v2 et Electron restent en lice ; on développe en pur web (navigateur) et on
+tranchera au plus tard à l'étape 3 (habillage). **Pourquoi :** ~95 % du code ne dépend
+pas de la coquille. **Garde-fou :** valider tôt (dès l'étape 0-1) que SharedArrayBuffer
+(nécessaire à `input()` synchrone et à l'interruption) fonctionne dans la coquille
+pressentie, pour ne pas découvrir un blocage à l'étape 3. Penchant indicatif de Claude :
+Tauri (léger, voie mobile).
+
 ## Questions ouvertes (l'arbre restant, dans l'ordre)
 
-1. Coquille desktop : Tauri vs Electron
-2. Framework UI et langage (TypeScript pressenti)
+1. Framework UI et langage (TypeScript pressenti)
 3. Rendu : carte 3D (Three.js pressenti), scène 2D de la salle (Canvas/PixiJS/DOM)
 4. Architecture d'exécution du Python joueur (worker, timeout, input, tests)
 5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md)
