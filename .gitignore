@@ -1,5 +1,10 @@
+# Dépendances et build
+node_modules/
+dist/
+
 # IDE
 .idea/
+.vscode/
 
 # Claude
 CLAUDE.md

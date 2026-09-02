@@ -1,0 +1,106 @@
+/* Palette Celeste — CONCEPTION §5 */
+:root {
+  --nuit: #1a1a2e;
+  --violet: #3d2b6b;
+  --rose: #e04c6a;
+  --cyan: #59d3e8;
+  --jaune: #f7d774;
+  --creme: #f4ecd8;
+
+  --taille-base: 16px;
+}
+
+:root[data-taille='petite'] {
+  --taille-base: 14px;
+}
+:root[data-taille='grande'] {
+  --taille-base: 19px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, var(--nuit) 0%, var(--violet) 130%);
+  color: var(--creme);
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: var(--taille-base);
+}
+
+#app {
+  height: 100%;
+}
+
+/* Structure commune des écrans */
+.ecran {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.2em;
+  letter-spacing: 0.08em;
+  color: var(--creme);
+  text-shadow: 0 0 24px rgba(89, 211, 232, 0.25);
+}
+
+.aide {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  opacity: 0.45;
+  font-size: 0.85em;
+}
+
+/* Menus navigables au clavier */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0.55rem 2.2rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.menu .actif button {
+  background: rgba(224, 76, 106, 0.18);
+  color: var(--rose);
+}
+
+.menu .actif button::before {
+  content: '▸ ';
+}
+
+/* Panneau générique (options, slots…) */
+.panneau {
+  background: rgba(26, 26, 46, 0.75);
+  border: 1px solid rgba(244, 236, 216, 0.12);
+  border-radius: 10px;
+  padding: 1.6rem 2rem;
+  min-width: min(30rem, 90vw);
+}
