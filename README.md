@@ -21,6 +21,19 @@ npm run dev
 
 Puis ouvrir http://localhost:5173 — tout se joue au clavier.
 
+## Musique (optionnelle)
+
+La bande originale de *Celeste* n'est pas distribuée avec ce dépôt. Pour
+l'expérience complète :
+
+1. Récupérez la BO (prix libre) sur le Bandcamp officiel de Lena Raine :
+   [radicaldreamland.bandcamp.com](https://radicaldreamland.bandcamp.com/album/celeste-original-soundtrack)
+2. Placez les MP3 dans `public/musiques/` au format `01. Prologue.mp3`
+   (`node scripts/renommer-musiques.mjs` renomme un téléchargement Bandcamp
+   automatiquement).
+
+Sans ces fichiers, le jeu fonctionne normalement, en silence.
+
 ## Sous le capot
 
 - Interface : [Svelte 5](https://svelte.dev) + TypeScript, construite avec [Vite](https://vite.dev)
