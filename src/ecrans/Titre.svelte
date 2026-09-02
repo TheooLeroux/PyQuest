@@ -147,8 +147,14 @@
     color: var(--rose);
   }
 
+  .menu button {
+    position: relative;
+  }
+
   .menu button::before {
-    content: '▸ ';
+    content: '▸';
+    position: absolute;
+    left: 0.9rem;
     opacity: 0;
   }
 

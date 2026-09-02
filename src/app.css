@@ -92,10 +92,16 @@ h1 {
   color: var(--rose);
 }
 
-/* La flèche occupe sa place sur TOUS les éléments (invisible sur les
-   inactifs) : la sélection ne décale jamais la mise en page. */
+/* La flèche est hors du flux (absolue, dans la marge du bouton) : elle
+   n'occupe aucune place — libellés centrés, aucun décalage à la sélection. */
+.menu button {
+  position: relative;
+}
+
 .menu button::before {
-  content: '▸ ';
+  content: '▸';
+  position: absolute;
+  left: 0.9rem;
   opacity: 0;
 }
 
