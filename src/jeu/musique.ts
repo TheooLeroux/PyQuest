@@ -2,10 +2,11 @@
 // assets privés) — s'ils manquent ou que le navigateur bloque la lecture,
 // silence, sans erreur (CONCEPTION §5 : fallback silencieux).
 
-// Nommage des fichiers : celui de l'album officiel (« 01. Prologue.mp3 »…).
+// Nommage des fichiers : celui de l'album officiel (« 05. Postcard from
+// Celeste Mountain.mp3 »…). C'est la piste 05 qui joue sur l'écran titre.
 const SOURCES_TITRE = [
-  '/musiques/01. Prologue.mp3',
-  '/musiques/01. Prologue.ogg',
+  '/musiques/05. Postcard from Celeste Mountain.mp3',
+  '/musiques/05. Postcard from Celeste Mountain.ogg',
   '/musiques/titre.ogg',
   '/musiques/titre.mp3',
 ];

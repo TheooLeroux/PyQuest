@@ -1,0 +1,8 @@
+Trouver un nom
+Poser sur papier le concept, mise en page, menu
+Se procurer les différents assets
+Modeliser la bdd avec diagramme
+Préparer schéma
+Préparer trello
+Préparer Figma minimal
+Commencer archi
