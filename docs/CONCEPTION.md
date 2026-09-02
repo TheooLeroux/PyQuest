@@ -102,7 +102,7 @@ Sept chapitres, un par concept, en écho aux chapitres de Celeste. Chaque chapit
 | `fill` | Code à trous (`____`) | Comme `output` ou `function` |
 | `read` | QCM : « qu'affiche ce code ? » | Réponse exacte |
 
-Une salle peut avoir des **tests cachés** (anti-triche « je hardcode la sortie ») et des **contraintes** vérifiées automatiquement sur la forme du code : « interdit d'utiliser `sum` », « doit contenir une boucle `for` » — c'est ce qui rend les fraises possibles.
+Une salle embarque **plusieurs jeux de tests aux cas variés** dont la consigne ne montre qu'un exemple (inutile d'apprendre les réponses par cœur : les autres cas échouent), et des **contraintes** vérifiées automatiquement sur la forme du code : « interdit d'utiliser `sum` », « doit contenir une boucle `for` » — c'est ce qui rend les fraises possibles et protège les salles à résultat fixe.
 
 ## 5. Direction artistique & UX
 

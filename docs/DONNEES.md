@@ -40,7 +40,7 @@ Salle  ── id stable "03_04" — sert aussi de seed au terrain procédural
 │  titre, type, consigne (Markdown), code de départ, difficulté ★,
 │  drapeau « cœur de cristal »
 │
-├── 1..N  JeuDeTest      entrées fournies → attendu ; visible ou caché
+├── 1..N  JeuDeTest      entrées fournies → attendu ; cas variés fixés d'avance
 ├── 0..N  Contrainte     forme du code : « interdit sum » / « requiert for »
 ├── 0..1  Fraise         libellé du défi + ses propres Contraintes en plus
 ├── 0..3  Indice         palier 1 (Mamie, cryptique) → 2 (pseudo-code) → 3 (solution)
@@ -60,8 +60,11 @@ Transverses (pas rattachés à une salle) :
 - **Dialogues en deux étages** (pools transverses + répliques locales) : le pool couvre
   ~95 % des besoins (WORLDBUILDING les définit par situation et palier de chutes) ; les
   répliques locales permettent le sur-mesure (« Oshiro apparaît au chapitre 5 »).
-- **JeuDeTest visible/caché dès le modèle** : l'anti-triche du §4 de la conception est
-  une propriété du test, pas une mécanique greffée après coup.
+- **Pas de notion de « test caché »** (décidé le 2026-09-02) : une salle a simplement
+  plusieurs jeux de tests aux cas variés, fixés d'avance (déterministes, rejouables),
+  dont la consigne ne montre qu'un exemple. L'anti-par-cœur vient de la multiplicité
+  des cas (entrées variables) et des contraintes (salles à résultat fixe) — un concept
+  de moins, même protection.
 - **Contrainte = entité réutilisée** par la salle (obligatoires) et la fraise (bonus) :
   même vérificateur, deux usages.
 - **Id de salle stable et signifiant** (`03_04`) : référencé par la progression et seed
