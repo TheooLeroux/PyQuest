@@ -3,9 +3,13 @@ node_modules/
 dist/
 public/pyodide/
 
-# Musiques (BO de Celeste) : présentes en local et dans les builds,
-# jamais redistribuées via le dépôt
+# Assets audio de Celeste (BO, bruitages) : présents en local et dans les
+# builds, jamais redistribués via le dépôt
 public/musiques/
+public/sons/
+
+# Outillage d'extraction local
+.venv-sons/
 
 # IDE
 .idea/
