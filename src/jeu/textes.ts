@@ -1,6 +1,7 @@
 const fr = {
   'titre.appuie': 'Appuie sur une touche',
   'titre.disclaimer': 'Jeu de fan non commercial — non affilié à EXOK Games',
+  'titre.musique': 'Musique : Lena Raine (Celeste)',
   'titre.jouer': 'Jouer',
   'titre.options': 'Options',
   'titre.credits': 'Crédits',
@@ -64,6 +65,7 @@ export type CleTexte = keyof typeof fr;
 const en: Record<CleTexte, string> = {
   'titre.appuie': 'Press any key',
   'titre.disclaimer': 'Non-commercial fan game — not affiliated with EXOK Games',
+  'titre.musique': 'Music: Lena Raine (Celeste)',
   'titre.jouer': 'Play',
   'titre.options': 'Options',
   'titre.credits': 'Credits',

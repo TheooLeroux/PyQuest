@@ -71,7 +71,10 @@
   </div>
 
   <span class="version">{VERSION}</span>
-  <span class="disclaimer">{t('titre.disclaimer')}</span>
+  <span class="mentions">
+    {t('titre.musique')}<br />
+    {t('titre.disclaimer')}
+  </span>
 </main>
 
 <style>
@@ -151,12 +154,14 @@
     color: #b8a5df;
   }
 
-  .disclaimer {
+  .mentions {
     position: absolute;
     right: 1.4rem;
     bottom: 1.2rem;
     opacity: 0.6;
     font-size: 0.85em;
     color: #b8a5df;
+    text-align: right;
+    line-height: 1.5;
   }
 </style>
