@@ -2,7 +2,13 @@
 // assets privés) — s'ils manquent ou que le navigateur bloque la lecture,
 // silence, sans erreur (CONCEPTION §5 : fallback silencieux).
 
-const SOURCES_TITRE = ['/musiques/titre.ogg', '/musiques/titre.mp3'];
+// Nommage des fichiers : celui de l'album officiel (« 01. Prologue.mp3 »…).
+const SOURCES_TITRE = [
+  '/musiques/01. Prologue.mp3',
+  '/musiques/01. Prologue.ogg',
+  '/musiques/titre.ogg',
+  '/musiques/titre.mp3',
+];
 
 let audio: HTMLAudioElement | null = null;
 
