@@ -1,6 +1,7 @@
 <script lang="ts">
   import { aller, etat, t } from '../jeu/etat.svelte';
   import { jouerMusiqueTitre } from '../jeu/musique';
+  import { jouerSon } from '../jeu/sons';
   import LogoPyQuest from './LogoPyQuest.svelte';
   import Neige from './Neige.svelte';
 
@@ -26,19 +27,24 @@
     jouerMusiqueTitre(etat.reglages.volume);
 
     if (phase === 'logo') {
+      jouerSon('premiereTouche');
       phase = 'menu';
       e.preventDefault();
       return;
     }
     if (e.key === 'ArrowUp') {
+      jouerSon('menuHaut');
       index = (index + actions.length - 1) % actions.length;
       e.preventDefault();
     } else if (e.key === 'ArrowDown') {
+      jouerSon('menuBas');
       index = (index + 1) % actions.length;
       e.preventDefault();
     } else if (e.key === 'Enter') {
+      jouerSon('valider');
       actions[index].faire();
     } else if (e.key === 'Escape') {
+      jouerSon('retour');
       phase = 'logo';
     }
   }

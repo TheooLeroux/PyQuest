@@ -29,7 +29,7 @@ def taille_segment(segment: "fsb5.FSB5") -> int | None:
 def extraire(chemin_banque: str) -> None:
     banque = pathlib.Path(chemin_banque)
     donnees = banque.read_bytes()
-    sortie = pathlib.Path(__file__).parent.parent / 'public' / 'sons' / 'brut' / banque.stem
+    sortie = pathlib.Path(__file__).parent.parent / 'assets-bruts' / 'sons' / banque.stem
     sortie.mkdir(parents=True, exist_ok=True)
 
     total, anonymes = 0, 0

@@ -8,6 +8,7 @@
   import { aller, t } from '../jeu/etat.svelte';
   import { enregistrerPartie, etatSalle, partie } from '../jeu/partie.svelte';
   import { salleSuivante } from '../jeu/progression';
+  import { jouerSon } from '../jeu/sons';
   import Editeur from './Editeur.svelte';
 
   const { fiche }: { fiche: FicheSalle } = $props();
@@ -116,6 +117,7 @@
   }
 
   function sortir() {
+    jouerSon('carteRetour');
     etat.code = code;
     memoriserTemps();
     enregistrerPartie();

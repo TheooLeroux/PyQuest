@@ -1,8 +1,12 @@
 <script lang="ts">
   import { retour, t } from '../jeu/etat.svelte';
+  import { jouerSon } from '../jeu/sons';
 
   function surTouche(e: KeyboardEvent) {
-    if (e.key === 'Escape') retour();
+    if (e.key === 'Escape') {
+      jouerSon('retour');
+      retour();
+    }
   }
 </script>
 

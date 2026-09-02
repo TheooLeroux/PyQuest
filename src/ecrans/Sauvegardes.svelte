@@ -3,6 +3,7 @@
   import { aller, retour, t } from '../jeu/etat.svelte';
   import { creerEtOuvrirSlot, effacerSlot, listerSlots, ouvrirSlot } from '../jeu/partie.svelte';
   import { pourcentageAscension } from '../jeu/progression';
+  import { jouerSon } from '../jeu/sons';
   import { NOMBRE_SLOTS } from '../stockage/slots';
 
   let slots = $state(listerSlots());
@@ -13,9 +14,11 @@
   function ouvrir() {
     const slot = slots[index];
     if (slot) {
+      jouerSon('slotOuvrir');
       ouvrirSlot(index + 1, slot);
       aller('carte');
     } else {
+      jouerSon('valider');
       nomSaisi = '';
       mode = 'creation';
     }
@@ -24,6 +27,7 @@
   function creer() {
     const nom = nomSaisi.trim();
     if (nom === '') return;
+    jouerSon('nomAccepte');
     creerEtOuvrirSlot(index + 1, nom);
     aller('carte');
   }
@@ -32,23 +36,30 @@
     if (mode === 'creation') return; // le champ de saisie gère ses touches
     if (mode === 'suppression') {
       if (e.key === 'Enter') {
+        jouerSon('slotSupprimer');
         effacerSlot(index + 1);
         slots = listerSlots();
+      } else {
+        jouerSon('retour');
       }
       mode = 'liste';
       return;
     }
     if (e.key === 'ArrowUp') {
+      jouerSon('slotDefile');
       index = (index + NOMBRE_SLOTS - 1) % NOMBRE_SLOTS;
       e.preventDefault();
     } else if (e.key === 'ArrowDown') {
+      jouerSon('slotDefile');
       index = (index + 1) % NOMBRE_SLOTS;
       e.preventDefault();
     } else if (e.key === 'Enter') {
       ouvrir();
     } else if (e.key === 'Delete' && slots[index]) {
+      jouerSon('invalide');
       mode = 'suppression';
     } else if (e.key === 'Escape') {
+      jouerSon('retour');
       retour();
     }
   }

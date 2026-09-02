@@ -4,6 +4,7 @@
   import { aller, retour, t } from '../jeu/etat.svelte';
   import { enregistrerPartie, entrerDansChapitre, partie } from '../jeu/partie.svelte';
   import { chapitreDebloque, pourcentageAscension, statsChapitre } from '../jeu/progression';
+  import { jouerSon } from '../jeu/sons';
 
   const slot = $derived(partie.slot!);
   let index = $state(0);
@@ -22,21 +23,28 @@
 
   function gravir() {
     const ligne = lignes[index];
-    if (!ligne.debloque) return;
+    if (!ligne.debloque) {
+      jouerSon('invalide');
+      return;
+    }
+    jouerSon('carteChoisir');
     entrerDansChapitre(ligne.chapitre.num);
     if (partie.salleId) aller('salle');
   }
 
   function surTouche(e: KeyboardEvent) {
     if (e.key === 'ArrowUp') {
+      jouerSon('carteGauche');
       index = (index + lignes.length - 1) % lignes.length;
       e.preventDefault();
     } else if (e.key === 'ArrowDown') {
+      jouerSon('carteDroite');
       index = (index + 1) % lignes.length;
       e.preventDefault();
     } else if (e.key === 'Enter') {
       gravir();
     } else if (e.key === 'Escape') {
+      jouerSon('carteRetour');
       enregistrerPartie();
       retour();
     }
