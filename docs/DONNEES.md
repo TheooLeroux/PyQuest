@@ -164,6 +164,23 @@ langue avant le choix du slot ; un joueur multi-slots ne règle rien deux fois.
   En développement navigateur, même contenu stocké côté navigateur ; la coquille
   desktop branchera l'écriture disque.
 
+## Domaine 3 — Le Registre (post-MVP) : esquisse — validée le 2026-09-02
+
+```
+Cordée                                  ← le « compte » (WORLDBUILDING)
+├── nom de cordée         (unique)
+├── code de grimpe        (4 mots — stockés chiffrés, jamais en clair)
+├── email de secours      (optionnel)
+└── 1 Ascension gravée    ← la copie du slot inscrit
+    ├── contenu du slot   (le même JSON que la save locale, tel quel)
+    ├── gravée le         (date de dernière sync)
+    └── version du jeu    (migration des vieilles saves)
+```
+
+**Pourquoi :** l'ascension gravée EST le fichier de save local — le serveur ne fait que
+le conserver ; pas de second modèle à maintenir, la sync est une copie de fichier.
+Schéma détaillé et techno serveur : à décider quand le Registre entrera en chantier.
+
 ## Questions ouvertes
 
 1. Détail fin des champs : Contrainte (vocabulaire des règles), pools de répliques,
