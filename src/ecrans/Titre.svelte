@@ -147,8 +147,13 @@
     color: var(--rose);
   }
 
-  .menu .actif button::before {
+  .menu button::before {
     content: '▸ ';
+    opacity: 0;
+  }
+
+  .menu .actif button::before {
+    opacity: 1;
   }
 
   .version {

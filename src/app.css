@@ -92,8 +92,15 @@ h1 {
   color: var(--rose);
 }
 
-.menu .actif button::before {
+/* La flèche occupe sa place sur TOUS les éléments (invisible sur les
+   inactifs) : la sélection ne décale jamais la mise en page. */
+.menu button::before {
   content: '▸ ';
+  opacity: 0;
+}
+
+.menu .actif button::before {
+  opacity: 1;
 }
 
 /* Panneau générique (options, slots…) */
