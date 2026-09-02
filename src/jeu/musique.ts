@@ -41,7 +41,7 @@ export function reglerVolumeMusique(volume: number): void {
   if (audio) audio.volume = volumeNormalise(volume);
 }
 
-export function arreterMusique(): void {
+/** Pause sans perdre la position : la musique reprendra où elle en était. */
+export function mettreMusiqueEnPause(): void {
   audio?.pause();
-  audio = null;
 }
