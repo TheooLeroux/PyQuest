@@ -150,9 +150,24 @@ Langue, volume, taille de police vivent au niveau de l'app, pas du slot.
 **Pourquoi :** standard des jeux console (dont Celeste) ; l'écran titre connaît la
 langue avant le choix du slot ; un joueur multi-slots ne règle rien deux fois.
 
+## Stockage physique — validé le 2026-09-02
+
+- **Contenu pédagogique : un fichier texte par salle** (en-tête structuré YAML +
+  consigne en Markdown), rangés par chapitre (`contenu/03-resort/03_04.md`), embarqués
+  dans l'app au build, validés automatiquement (schéma) pour attraper les fautes de
+  frappe. **Pourquoi :** ~60 fiches écrites à la main — le confort d'écriture et la
+  relecture en diff git priment ; JSON écarté (consignes multi-lignes pénibles).
+- **Sauvegardes : un fichier JSON par slot** (`slot1.json`…`slot3.json` +
+  `reglages.json`) dans le dossier utilisateur standard. **Pourquoi :** une save = un
+  fichier copiable (export/import de la roadmap quasi gratuit), lisible/réparable,
+  volume minuscule ; SQLite écarté (puissance sans besoin, dépendance en plus).
+  En développement navigateur, même contenu stocké côté navigateur ; la coquille
+  desktop branchera l'écriture disque.
+
 ## Questions ouvertes
 
-1. Détail fin des champs : Contrainte (vocabulaire des règles), pools de répliques, traducteur d'erreurs
+1. Détail fin des champs : Contrainte (vocabulaire des règles), pools de répliques,
+   traducteur d'erreurs — à fixer au moment de l'implémentation, sur exemples réels
 2. Détail Indice, Contrainte, PoolRépliques, TraductionErreur
 3. Domaine 2 — Progression (slots, statuts, point de reprise)
 4. Domaine 3 — Registre (esquisse seulement, post-MVP)
