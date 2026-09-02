@@ -28,6 +28,7 @@
     const nom = nomSaisi.trim();
     if (nom === '') return;
     jouerSon('nomAccepte');
+    jouerSon('slotOuvrir');
     creerEtOuvrirSlot(index + 1, nom);
     aller('carte');
   }

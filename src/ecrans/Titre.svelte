@@ -27,7 +27,7 @@
     jouerMusiqueTitre(etat.reglages.volume);
 
     if (phase === 'logo') {
-      jouerSon('premiereTouche');
+      jouerSon('valider');
       phase = 'menu';
       e.preventDefault();
       return;
