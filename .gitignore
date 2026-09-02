@@ -3,10 +3,11 @@ node_modules/
 dist/
 public/pyodide/
 
-# Assets audio de Celeste (BO, bruitages) : présents en local et dans les
-# builds, jamais redistribués via le dépôt
+# Musique (BO de Celeste, droits Materia Collective) : locale et dans les
+# builds, jamais redistribuée via le dépôt. Les bruitages UTILISÉS par le jeu
+# (public/sons/) sont versionnés dans le cadre de la politique fan works
+# d'EXOK ; l'archive brute d'extraction, elle, reste locale.
 public/musiques/
-public/sons/
 assets-bruts/
 
 # Outillage d'extraction local

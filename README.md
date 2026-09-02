@@ -53,7 +53,8 @@ Projet personnel, développé en français d'abord (interface FR/EN prévue).
 **PyQuest est un projet de fan, strictement non commercial.** Il n'est ni
 développé, ni approuvé, ni affilié à EXOK Games / Maddy Makes Games, Inc.
 
-- *Celeste*, son univers et ses assets visuels sont la propriété de
+- *Celeste*, son univers, ses assets visuels et sonores (dont les bruitages
+  d'interface présents dans `public/sons/`) sont la propriété de
   **Maddy Makes Games, Inc.** Leur présence ici s'inscrit dans le cadre de la
   politique fan works publiée par EXOK (dépôt Celeste 64) : usage non
   commercial, avec mention claire de non-affiliation.
