@@ -102,9 +102,30 @@ frustration »). **Surcharge par salle** possible : une salle peut se déclarer 
 stricte ou plus tolérante si son exercice l'exige (ex. une salle du Prologue qui
 enseigne précisément les espaces invisibles).
 
+### La fiche de salle — modèle de référence, validé le 2026-09-02
+
+```
+identifiant      : 03_04            (stable à jamais ; seed du terrain)
+titre            : La pyramide
+difficulté       : ★★☆
+donné au joueur  : standard         (│ buggé │ à trous │ qcm)
+jugé par         : affichage        (│ fonction │ qcm)
+consigne         : Markdown, avec un exemple montré
+code de départ   : # Utilise une boucle for
+tests            : plusieurs cas variés fixés d'avance ; le 1er sert d'exemple
+contraintes      : 0..N (forme du code, avec message d'explication)
+fraise           : 0..1 (libellé + contraintes supplémentaires)
+indices          : 1. Mamie (cryptique) · 2. pseudo-code · 3. solution commentée
+répliques locales: 0..N (situation, personnage, texte)
+```
+
+Les répliques génériques (pools par situation × personnage × palier de chutes) et le
+traducteur d'erreurs Python → français vivent dans des fichiers communs, pas dans les
+fiches (sinon recopiés dans 50 salles).
+
 ## Questions ouvertes
 
-1. Détail des champs restants : JeuDeTest, Indice, Contrainte, répliques, traducteur d'erreurs
+1. Détail fin des champs : Contrainte (vocabulaire des règles), pools de répliques, traducteur d'erreurs
 2. Détail Indice, Contrainte, PoolRépliques, TraductionErreur
 3. Domaine 2 — Progression (slots, statuts, point de reprise)
 4. Domaine 3 — Registre (esquisse seulement, post-MVP)
