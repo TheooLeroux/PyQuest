@@ -93,8 +93,14 @@ Tauri (léger, voie mobile).
   oblige ; méthode documentée par Pyodide. Requiert les en-têtes COOP/COEP (une ligne
   dans Vite ; à re-valider dans la coquille — garde-fou déjà acté en décision 2).
 
-## Questions ouvertes (l'arbre restant, dans l'ordre)
+### 6. Outillage qualité : Vitest + ESLint + Prettier + svelte-check — validé le 2026-09-02
+
+**Pourquoi :** standards de l'écosystème Vite/Svelte, zéro débat de style (formatage
+automatique). Vitest ciblera d'abord le cœur critique : comparateur de sortie,
+normalisation, vérificateur de contraintes, progression. Vérifications exécutées par
+Claude avant chaque commit.
+
+## Questions ouvertes (l'arbre restant)
 5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md, chantier ③)
-6. Outillage : tests, lint (proposition en cours)
 7. Packaging & distribution (installateur) — lié à la coquille, reporté (décision 2) ;
    Registre = post-MVP, schéma serveur le moment venu
