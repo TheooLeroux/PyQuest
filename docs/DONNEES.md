@@ -68,9 +68,40 @@ Transverses (pas rattachés à une salle) :
   du terrain (ECRAN_SALLE : silhouette stable). Règle : on ne renumérote jamais, on
   numérote large.
 
+### Salle : « donné au joueur » et « jugé par » séparés — validé le 2026-09-02
+
+Chaque salle porte deux informations indépendantes :
+
+- **Donné au joueur** : `standard` (éditeur + code de départ) │ `buggé` (code à
+  réparer) │ `à trous` (`____` à compléter) │ `qcm` (pas d'éditeur)
+- **Jugé par** : `affichage` (comparaison de la sortie console) │ `fonction` (la
+  fonction du joueur est appelée sur des cas) │ `qcm` (réponse exacte)
+
+**Pourquoi :** un exercice « code buggé à réparer » doit de toute façon être jugé par
+affichage ou par fonction — un champ `type` unique mélangerait les deux notions et
+dupliquerait la logique de jugement. Le moteur ne connaît que 3 modes de jugement ;
+toutes les combinaisons de présentation fonctionnent sans code supplémentaire. Les 6
+types du §4 de CONCEPTION restent le vocabulaire d'auteur (`output_input` = standard +
+affichage + entrées scriptées ; `fix` = buggé + affichage ou fonction ; etc.).
+
+### Jugement par affichage : règles de tolérance — validé le 2026-09-02
+
+| Différence avec l'attendu | Verdict | Pourquoi |
+|---|---|---|
+| Espace(s) en **fin de ligne** | Validé quand même | Invisible, n'apprend rien — première cause d'échec débutant (CONCEPTION §3) |
+| Ligne(s) vide(s) **finale(s)** | Validé quand même | Un `print()` de trop à la fin = différence invisible |
+| Espaces **au milieu** d'une ligne | Chute | Visible : le diff surligne l'espace en trop |
+| Casse, accents | Chute | Visible : corriger apprend quelque chose |
+
+**Pourquoi :** on pardonne l'invisible qui n'enseigne rien, on reste strict sur tout ce
+que l'écran de chute sait montrer (CONCEPTION §7 : « comparaison trop stricte →
+frustration »). **Surcharge par salle** possible : une salle peut se déclarer plus
+stricte ou plus tolérante si son exercice l'exige (ex. une salle du Prologue qui
+enseigne précisément les espaces invisibles).
+
 ## Questions ouvertes
 
-1. Détail des champs Salle & JeuDeTest (types d'exercices, normalisation de sortie)
+1. Détail des champs restants : JeuDeTest, Indice, Contrainte, répliques, traducteur d'erreurs
 2. Détail Indice, Contrainte, PoolRépliques, TraductionErreur
 3. Domaine 2 — Progression (slots, statuts, point de reprise)
 4. Domaine 3 — Registre (esquisse seulement, post-MVP)
