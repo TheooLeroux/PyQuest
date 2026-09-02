@@ -60,9 +60,23 @@ Tauri (léger, voie mobile).
 - Les scènes de jeu (carte 3D, salle 2D) restent du code canvas impératif **hors**
   framework ; Svelte ne gère que écrans, panneaux et menus.
 
-## Questions ouvertes (l'arbre restant, dans l'ordre)
+### 4. Rendu : Three.js (carte) + PixiJS (salle) — validé le 2026-09-02
 
-3. Rendu : carte 3D (Three.js pressenti), scène 2D de la salle (Canvas/PixiJS/DOM)
+**Pourquoi :**
+- **Three.js** pour la montagne 3D (contre Babylon.js) : la référence du 3D web,
+  léger, recettes connues pour low-poly/flat shading/brume/billboards, meilleure
+  maîtrise de Claude. À écrire nous-mêmes : caméra sur rails et transitions (raisonnable).
+  Babylon écarté : plus lourd, et ses atouts (physique, XR, PBR) sont inutiles ici.
+- **PixiJS** pour la scène 2D de la salle (contre Canvas 2D natif et tout-Three) :
+  moteur 2D WebGL fait pour sprites/spritesheets/particules/filtres — l'écran où
+  « ça ressemble à un jeu, pas à un IDE » (risque n°4 de la conception) se gagne ;
+  mauvais endroit pour économiser une dépendance. Canvas 2D écarté (mini-moteur maison
+  à écrire, chaque effet devient un chantier, perfs CPU) ; tout-Three écarté (2D
+  pixel-perfect dans un outil 3D = combat permanent).
+- Coût assumé : deux renderers dans le projet — acceptable, ils ne se croisent jamais
+  (un par écran).
+
+## Questions ouvertes (l'arbre restant, dans l'ordre)
 4. Architecture d'exécution du Python joueur (worker, timeout, input, tests)
 5. Stockage local : saves des 3 slots, format du contenu pédagogique (→ DONNEES.md)
 6. Outillage : build, tests, lint
