@@ -71,12 +71,12 @@
 
 <svelte:window onkeydown={relancerMusique} onpointerdown={relancerMusique} />
 
-{#if surLaMontagne}
-  <FondMontagne zoom={versLaCarte ? 1.22 : 1} cle={versLaCarte ? 'carte' : etat.ecran} />
+{#if etat.ecran === 'sauvegardes'}
+  <FondMontagne zoom={etat.enVoyage ? 1.22 : 1} cle={etat.enVoyage ? 'carte' : etat.ecran} />
 {/if}
 
 <Ecran />
 
-{#if surLaMontagne && fuite}
+{#if etat.ecran === 'sauvegardes' && fuite}
   <TraitsDeFuite />
 {/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fiches } from '../contenu/catalogue';
   import { CHAPITRES, sallesDuChapitre } from '../contenu/chapitres';
-  import { camera } from '../jeu/camera.svelte';
   import { aller, retour, t } from '../jeu/etat.svelte';
   import { enregistrerPartie, lancerSalle, partie } from '../jeu/partie.svelte';
   import {
@@ -12,7 +11,8 @@
     statsChapitre,
   } from '../jeu/progression';
   import { jouerSon } from '../jeu/sons';
-  import { ANCRES, HAUTEUR_SCENE, LARGEUR_SCENE } from '../scenes/chaine';
+  import Carte3D, { type EtatChapitre } from './Carte3D.svelte';
+  import Nuages from './Nuages.svelte';
   import VignetteChapitre, { type ChoixVignette } from './VignetteChapitre.svelte';
 
   const slot = $derived(partie.slot!);
@@ -31,6 +31,24 @@
   let selection = $state(chapitreCourant);
   let vignetteOuverte = $state(false);
   let indexVignette = $state(0);
+
+  // L'arrivée : la nappe de nuages couvre la bascule vers la scène 3D,
+  // pendant que la caméra fait son approche.
+  let arrivee = $state(true);
+  $effect(() => {
+    const minuterie = setTimeout(() => (arrivee = false), 3400);
+    return () => clearTimeout(minuterie);
+  });
+
+  const etatsChapitres: Record<number, EtatChapitre> = $derived(
+    Object.fromEntries(
+      CHAPITRES.map((chapitre) => {
+        if (!accessible(chapitre.num)) return [chapitre.num, 'verrouille'];
+        const stats = statsChapitre(slot, fiches, chapitre.num);
+        return [chapitre.num, stats.validees === stats.total ? 'valide' : 'ouvert'];
+      }),
+    ),
+  );
 
   const statsSelection = $derived(statsChapitre(slot, fiches, selection));
   const chapitreSelection = $derived(CHAPITRES.find((c) => c.num === selection)!);
@@ -146,47 +164,15 @@
 <svelte:window onkeydown={surTouche} />
 
 <main class="carte">
-  <!-- Les repères vivent DANS la scène : même repère de coordonnées et même
-       caméra que la montagne — ils restent collés à son versant. -->
-  <div class="calque" style="--zoom: {camera.zoom}">
-    <svg viewBox="0 0 {LARGEUR_SCENE} {HAUTEUR_SCENE}" preserveAspectRatio="xMidYMax slice">
-      {#each CHAPITRES as chapitre (chapitre.num)}
-        {@const ancre = ANCRES[chapitre.num]}
-        {@const ouvert = accessible(chapitre.num)}
-        {@const stats = statsChapitre(slot, fiches, chapitre.num)}
-        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-        <g
-          class="palier"
-          class:verrouille={!ouvert}
-          class:selectionne={ouvert && selection === chapitre.num}
-          class:valide={stats.total > 0 && stats.validees === stats.total}
-          transform="translate({ancre.x}, {ancre.y})"
-          onclick={() => cliquerPalier(chapitre.num)}
-          role="button"
-          tabindex="-1"
-        >
-          <circle class="zone" cy="-20" r="42" />
-          <g class="corps">
-            <rect class="mat" x="-2" y="-46" width="4" height="46" rx="1.5" />
-            <path class="fanion" d="M2,-46 L36,-36 L2,-26 Z" />
-            {#if chapitreCourant === chapitre.num && ouvert}
-              <g class="madeline">
-                <circle cy="-60" r="10" />
-                <circle class="coeur-pion" cy="-60" r="3.5" />
-              </g>
-            {/if}
-          </g>
-          {#if ouvert && selection === chapitre.num && !vignetteOuverte}
-            <text class="etiquette" y="34">{chapitre.num}. {chapitre.nom}</text>
-          {/if}
-        </g>
-      {/each}
-    </svg>
-  </div>
+  <Carte3D {selection} courant={chapitreCourant} etats={etatsChapitres} onchoisir={cliquerPalier} />
 
   <p class="grimpeur">
     🧗 {slot.nom} — {pourcentageAscension(slot, fiches)} % {t('carte.ascension')}
   </p>
+
+  {#if !vignetteOuverte}
+    <p class="titre-chapitre">{selection}. {chapitreSelection.nom}</p>
+  {/if}
 
   {#if vignetteOuverte}
     <VignetteChapitre
@@ -200,6 +186,10 @@
     />
   {/if}
 
+  {#if arrivee}
+    <Nuages mode="arrivee" />
+  {/if}
+
   <p class="aide">{t('carte.aide')}</p>
 </main>
 
@@ -208,38 +198,7 @@
     position: relative;
     z-index: 1;
     height: 100%;
-  }
-
-  /* Réplique exacte de la géométrie d'un plan de facteur 1 du fond :
-     mêmes débords, même transformation — les repères zooment avec le mont. */
-  .calque {
-    position: absolute;
-    inset: -10% -22% -3% -22%;
-    transform: scale(var(--zoom)) translateY(calc((var(--zoom) - 1) * 4%));
-    transform-origin: 50% 80%;
-    pointer-events: none;
-  }
-
-  .calque svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .grimpeur,
-  .calque,
-  .aide {
-    animation: arrivee 0.6s ease-out 0.55s both;
-  }
-
-  @keyframes arrivee {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    overflow: hidden;
   }
 
   .grimpeur {
@@ -251,85 +210,39 @@
     font-size: 0.9em;
   }
 
-  .palier {
-    pointer-events: auto;
-    cursor: pointer;
+  /* La carte-titre flottante du chapitre sélectionné (ECRAN_CARTE.md). */
+  .titre-chapitre {
+    position: absolute;
+    top: 2.6rem;
+    left: 50%;
+    translate: -50% 0;
+    margin: 0;
+    padding: 0.5rem 1.6rem;
+    background: rgba(20, 18, 42, 0.78);
+    border: 1px solid rgba(244, 236, 216, 0.18);
+    border-radius: 8px;
+    letter-spacing: 0.08em;
+    font-size: 1.1em;
+    animation: descente 0.35s ease-out both;
   }
 
-  .zone {
-    fill: transparent;
-  }
-
-  /* L'échelle de sélection s'applique au corps SEULEMENT : la position du
-     repère (attribut translate du groupe parent) reste intacte. */
-  .corps {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    transition: transform 0.15s;
-  }
-
-  .selectionne .corps {
-    transform: scale(1.35);
-  }
-
-  .mat {
-    fill: #efe8d6;
-    stroke: #1c1830;
-    stroke-width: 1.2;
-  }
-
-  .fanion {
-    fill: #efe8d6;
-    stroke: #1c1830;
-    stroke-width: 2;
-    stroke-linejoin: round;
-    transition: fill 0.15s;
-  }
-
-  .valide .fanion {
-    fill: var(--jaune);
-  }
-
-  .selectionne .fanion {
-    fill: var(--rose);
-  }
-
-  /* Les chapitres verrouillés existent, dans la brume — on devine la suite. */
-  .verrouille {
-    opacity: 0.2;
-    filter: blur(1px);
-    cursor: default;
-    pointer-events: none;
-  }
-
-  .madeline circle {
-    fill: var(--rose);
-    stroke: #f4ecd8;
-    stroke-width: 2.5;
-    animation: flotte 2.2s ease-in-out infinite alternate;
-  }
-
-  .madeline .coeur-pion {
-    fill: #f4ecd8;
-    stroke: none;
-  }
-
-  @keyframes flotte {
+  @keyframes descente {
     from {
-      translate: 0 0;
+      opacity: 0;
+      translate: -50% -10px;
     }
     to {
-      translate: 0 -4px;
+      opacity: 1;
+      translate: -50% 0;
     }
   }
 
-  .etiquette {
-    font-size: 26px;
-    text-anchor: middle;
-    fill: #f4ecd8;
-    stroke: #14122a;
-    stroke-width: 7;
-    paint-order: stroke;
-    letter-spacing: 0.05em;
+  .aide {
+    position: absolute;
+    bottom: 1.1rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin: 0;
   }
 </style>
