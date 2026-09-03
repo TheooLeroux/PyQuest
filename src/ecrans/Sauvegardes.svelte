@@ -99,7 +99,7 @@
   <div class="tickets">
     {#each slots as slot, i (i)}
       {#if mode === 'creation' && i === index && !slot}
-        <div class="ticket actif creation" style="--angle: 0deg">
+        <div class="ticket actif creation" style="--angle: 0deg; --retard: 0ms">
           <span class="photo"><span class="scotch"></span>{i + 1}</span>
           <label>
             {t('sauvegardes.nomQuestion')}
@@ -112,7 +112,8 @@
           class="ticket"
           class:actif={i === index}
           class:danger={mode === 'suppression' && i === index}
-          style="--angle: {i === index ? 0 : i % 2 === 0 ? -0.8 : 0.7}deg"
+          style="--angle: {i === index ? 0 : i % 2 === 0 ? -0.8 : 0.7}deg; --retard: {250 +
+            i * 90}ms"
           onclick={() => cliquerCarte(i)}
         >
           <span class="photo"><span class="scotch"></span>{i + 1}</span>
@@ -154,6 +155,18 @@
     width: min(38rem, 92vw);
   }
 
+  /* Chaque ticket arrive en cascade, après le début du zoom du fond. */
+  @keyframes entree {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* Un ticket de papier : encoches latérales, léger désordre, encre foncée. */
   .ticket {
     position: relative;
@@ -177,6 +190,7 @@
       rotate 0.15s,
       scale 0.15s,
       background 0.15s;
+    animation: entree 0.45s ease-out var(--retard) both;
     mask:
       radial-gradient(circle 13px at 0 50%, transparent 97%, #000),
       radial-gradient(circle 13px at 100% 50%, transparent 97%, #000);

@@ -52,7 +52,7 @@
     if (surLaMontagne) {
       fuite = true;
       clearTimeout(timerFuite);
-      timerFuite = setTimeout(() => (fuite = false), 600);
+      timerFuite = setTimeout(() => (fuite = false), 950);
     }
   });
 </script>

@@ -93,6 +93,25 @@
 </main>
 
 <style>
+  /* Le contenu attend la fin du voyage (zoom du fond) avant d'apparaître. */
+  h1,
+  .grimpeur,
+  .chapitres,
+  .aide {
+    animation: arrivee 0.5s ease-out 0.45s both;
+  }
+
+  @keyframes arrivee {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .grimpeur {
     margin: 0;
     color: var(--cyan);
