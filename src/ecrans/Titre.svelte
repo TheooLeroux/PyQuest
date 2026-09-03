@@ -87,9 +87,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-      radial-gradient(ellipse 90% 70% at 70% 20%, rgba(61, 43, 107, 0.55), transparent 60%),
-      linear-gradient(200deg, #16102b 0%, #0a0716 55%, #070510 100%);
+    /* le ciel de base vient du body (commun à tous les écrans) ;
+       ici, seulement la touche violette du titre en surimpression */
+    background: radial-gradient(
+      ellipse 90% 70% at 70% 20%,
+      rgba(61, 43, 107, 0.45),
+      transparent 60%
+    );
   }
 
   .scene {

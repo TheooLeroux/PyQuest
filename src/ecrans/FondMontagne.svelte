@@ -47,18 +47,20 @@
 <div class="fond" aria-hidden="true">
   <Etoiles />
 
-  {#each PLANS as plan, i (i)}
-    <div class="plan" style="--facteur: {plan.facteur}; --zoom: {zoomCourant}">
-      <div class="derive" style="animation-delay: {i * -6}s">
-        <PlanMontagnes {plan} />
+  <div class="massif">
+    {#each PLANS as plan, i (i)}
+      <div class="plan" style="--facteur: {plan.facteur}; --zoom: {zoomCourant}">
+        <div class="derive" style="animation-delay: {i * -6}s">
+          <PlanMontagnes {plan} />
+        </div>
       </div>
-    </div>
-    {#if i < PLANS.length - 1}
-      <div class="voile" style="height: {34 - i * 7}%"></div>
-    {/if}
-  {/each}
+      {#if i < PLANS.length - 1}
+        <div class="voile" style="height: {34 - i * 7}%"></div>
+      {/if}
+    {/each}
 
-  <div class="brume"></div>
+    <div class="brume"></div>
+  </div>
 
   {#key cle}
     <Nuages />
@@ -72,10 +74,13 @@
     position: absolute;
     inset: 0;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 80% 55% at 50% 100%, rgba(51, 88, 111, 0.35), transparent 65%),
-      linear-gradient(195deg, #131933 0%, #0b0f22 45%, #081019 100%);
-    animation: apparition 1s ease-out both;
+    /* pas de fond propre : le ciel vit sur le body, commun à tous les écrans */
+  }
+
+  .massif {
+    position: absolute;
+    inset: 0;
+    animation: apparition 0.6s ease-out both;
   }
 
   @keyframes apparition {

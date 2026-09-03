@@ -28,7 +28,12 @@ body {
 }
 
 body {
-  background: linear-gradient(180deg, var(--nuit) 0%, var(--violet) 130%);
+  /* Le ciel de nuit, identique sous TOUS les écrans : l'interstice d'une
+     frame entre deux écrans a la même couleur qu'eux — invisible. */
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 100%, rgba(51, 88, 111, 0.35), transparent 65%),
+    linear-gradient(195deg, #131933 0%, #0b0f22 45%, #081019 100%);
+  background-attachment: fixed;
   color: var(--creme);
   font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   font-size: var(--taille-base);
