@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import { PLANS } from '../scenes/chaine';
   import Etoiles from './Etoiles.svelte';
   import Neige from './Neige.svelte';
@@ -10,19 +11,36 @@
   // fait DANS le massif. `cle` rejoue la nappe de nuages à chaque étape.
   const { zoom = 1, cle = '' }: { zoom?: number; cle?: string } = $props();
 
-  // Au montage, la scène part de plus loin puis glisse vers sa place.
+  const DUREE_VOYAGE_MS = 4200;
+
+  // Au montage, la caméra part de loin (68 %) puis vole vers sa place.
   // svelte-ignore state_referenced_locally
-  let zoomCourant = $state(zoom * 0.82);
+  let zoomCourant = $state(zoom * 0.68);
+  let animation = 0;
+
+  // Départ doux → croisière visible → atterrissage doux : c'est le mouvement
+  // entretenu qui donne l'impression de voyage (une transition CSS qui avale
+  // 85 % du trajet en quelques frames se lit comme un « pop »).
+  function easeInOutCubic(p: number): number {
+    return p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
+  }
+
+  function volerVers(cible: number): void {
+    const depart = untrack(() => zoomCourant);
+    if (Math.abs(cible - depart) < 0.001) return;
+    cancelAnimationFrame(animation);
+    const debut = performance.now();
+    const pas = (instant: number) => {
+      const progres = Math.min(1, (instant - debut) / DUREE_VOYAGE_MS);
+      zoomCourant = depart + (cible - depart) * easeInOutCubic(progres);
+      if (progres < 1) animation = requestAnimationFrame(pas);
+    };
+    animation = requestAnimationFrame(pas);
+  }
 
   $effect(() => {
-    const cible = zoom;
-    // Double rAF : l'état de départ est peint avant de lancer la transition.
-    const id = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        zoomCourant = cible;
-      });
-    });
-    return () => cancelAnimationFrame(id);
+    volerVers(zoom);
+    return () => cancelAnimationFrame(animation);
   });
 </script>
 
@@ -57,7 +75,7 @@
     background:
       radial-gradient(ellipse 80% 55% at 50% 100%, rgba(51, 88, 111, 0.35), transparent 65%),
       linear-gradient(195deg, #131933 0%, #0b0f22 45%, #081019 100%);
-    animation: apparition 0.6s ease-out both;
+    animation: apparition 1s ease-out both;
   }
 
   @keyframes apparition {
@@ -73,11 +91,12 @@
      et zoome selon son facteur de profondeur : parallaxe réelle. */
   .plan {
     position: absolute;
-    inset: -8% -20% -2% -20%;
+    inset: -10% -22% -3% -22%;
     transform: scale(calc(1 + (var(--zoom) - 1) * var(--facteur)))
-      translateY(calc((var(--zoom) - 1) * var(--facteur) * 2.5%));
+      translateY(calc((var(--zoom) - 1) * var(--facteur) * 4%));
     transform-origin: 50% 80%;
-    transition: transform 2.4s cubic-bezier(0.22, 0.85, 0.25, 1);
+    /* pas de transition : la caméra est pilotée image par image en JS */
+    will-change: transform;
   }
 
   /* La lente respiration du décor en idle, déphasée par plan. */

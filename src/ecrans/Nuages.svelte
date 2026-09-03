@@ -34,7 +34,7 @@
     filter: blur(26px);
     pointer-events: none;
     z-index: 4;
-    animation: balayage 2.6s cubic-bezier(0.3, 0.6, 0.3, 1) both;
+    animation: balayage 3.2s cubic-bezier(0.35, 0.55, 0.3, 1) both;
   }
 
   @keyframes balayage {
