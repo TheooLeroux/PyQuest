@@ -3,7 +3,12 @@
   import { formaterDate, formaterDuree } from '../jeu/affichage';
   import { aller, etat, retour, t } from '../jeu/etat.svelte';
   import { creerEtOuvrirSlot, effacerSlot, listerSlots, ouvrirSlot } from '../jeu/partie.svelte';
-  import { fraisesTotales, pourcentageAscension, tempsTotalSec } from '../jeu/progression';
+  import {
+    chutesTotales,
+    fraisesTotales,
+    pourcentageAscension,
+    tempsTotalSec,
+  } from '../jeu/progression';
   import { jouerSon } from '../jeu/sons';
   import { NOMBRE_SLOTS } from '../stockage/slots';
 
@@ -91,11 +96,11 @@
 <main class="ecran">
   <h1>{t('sauvegardes.titre')}</h1>
 
-  <div class="cartes">
+  <div class="tickets">
     {#each slots as slot, i (i)}
       {#if mode === 'creation' && i === index && !slot}
-        <div class="carte active creation">
-          <span class="numero">{i + 1}</span>
+        <div class="ticket actif creation" style="--angle: 0deg">
+          <span class="photo"><span class="scotch"></span>{i + 1}</span>
           <label>
             {t('sauvegardes.nomQuestion')}
             <!-- svelte-ignore a11y_autofocus -->
@@ -104,19 +109,24 @@
         </div>
       {:else}
         <button
-          class="carte"
-          class:active={i === index}
+          class="ticket"
+          class:actif={i === index}
           class:danger={mode === 'suppression' && i === index}
+          style="--angle: {i === index ? 0 : i % 2 === 0 ? -0.8 : 0.7}deg"
           onclick={() => cliquerCarte(i)}
         >
-          <span class="numero">{i + 1}</span>
+          <span class="photo"><span class="scotch"></span>{i + 1}</span>
           {#if slot}
             <span class="contenu">
               <span class="nom">{slot.nom}</span>
               <span class="stats">
-                ⚑ {pourcentageAscension(slot, fiches)} % · 🍓 {fraisesTotales(slot)} · ⏱
-                {formaterDuree(tempsTotalSec(slot))}
+                ⚑ {pourcentageAscension(slot, fiches)} % · 🍓 ×{fraisesTotales(slot)}
               </span>
+              {#if i === index && mode !== 'suppression'}
+                <span class="stats etendues">
+                  ☠ ×{chutesTotales(slot)} · ⏱ {formaterDuree(tempsTotalSec(slot))}
+                </span>
+              {/if}
             </span>
             {#if mode === 'suppression' && i === index}
               <span class="alerte">{t('sauvegardes.confirmerSuppression')}</span>
@@ -137,79 +147,121 @@
 </main>
 
 <style>
-  .cartes {
+  .tickets {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    width: min(36rem, 92vw);
+    gap: 1.3rem;
+    width: min(38rem, 92vw);
   }
 
-  .carte {
+  /* Un ticket de papier : encoches latérales, léger désordre, encre foncée. */
+  .ticket {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1.3rem;
     font: inherit;
-    color: inherit;
     text-align: left;
     cursor: pointer;
-    background: rgba(26, 26, 46, 0.75);
-    border: 1px solid rgba(244, 236, 216, 0.12);
-    border-radius: 10px;
-    padding: 1.1rem 1.5rem;
-    min-height: 4.6rem;
+    border: none;
+    border-radius: 6px;
+    padding: 1rem 1.6rem;
+    min-height: 5.2rem;
+    color: #57493a;
+    background: linear-gradient(174deg, #e3ddcd 0%, #d3ccba 100%);
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.45),
+      inset 0 0 26px rgba(120, 100, 70, 0.14);
+    rotate: var(--angle);
     transition:
-      border-color 0.12s,
-      transform 0.12s;
+      rotate 0.15s,
+      scale 0.15s,
+      background 0.15s;
+    mask:
+      radial-gradient(circle 13px at 0 50%, transparent 97%, #000),
+      radial-gradient(circle 13px at 100% 50%, transparent 97%, #000);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
   }
 
-  .carte.active {
-    border-color: var(--rose);
-    box-shadow: 0 0 18px rgba(224, 76, 106, 0.18);
-    transform: translateX(0.4rem);
+  .ticket.actif {
+    scale: 1.04;
+    color: #59391b;
+    background: linear-gradient(174deg, #f3c775 0%, #e5ab4e 100%);
+    box-shadow:
+      0 6px 22px rgba(0, 0, 0, 0.55),
+      inset 0 0 30px rgba(150, 95, 25, 0.22);
   }
 
-  .carte.danger {
-    border-color: var(--rose);
-    background: rgba(224, 76, 106, 0.16);
+  .ticket.danger {
+    background: linear-gradient(174deg, #e8987b 0%, #d97f60 100%);
+    color: #5c2415;
   }
 
-  .numero {
-    font-size: 1.5em;
-    opacity: 0.45;
-    min-width: 1.4rem;
-    text-align: center;
+  /* La « photo » scotchée (le portrait viendra plus tard). */
+  .photo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.2rem;
+    height: 3.2rem;
+    flex: none;
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #efe8d8;
+    background: linear-gradient(160deg, #6b5f8f 0%, #3d2b6b 100%);
+    border: 3px solid #f4efe2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    rotate: -2.5deg;
+  }
+
+  .scotch {
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    translate: -50% 0;
+    rotate: -6deg;
+    width: 2.4rem;
+    height: 0.85rem;
+    background: rgba(190, 215, 230, 0.5);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   }
 
   .contenu {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.25rem;
     flex: 1;
   }
 
   .nom {
-    font-size: 1.25em;
-    letter-spacing: 0.05em;
+    font-size: 1.3em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
   }
 
   .stats {
-    opacity: 0.8;
     font-size: 0.9em;
-    color: var(--cyan);
+    opacity: 0.85;
+  }
+
+  .etendues {
+    opacity: 0.7;
   }
 
   .vide {
-    opacity: 0.6;
+    opacity: 0.55;
     font-style: italic;
   }
 
   .date {
-    opacity: 0.5;
+    opacity: 0.55;
     font-size: 0.85em;
   }
 
   .alerte {
-    color: var(--rose);
+    font-weight: bold;
     font-size: 0.9em;
     max-width: 11rem;
     text-align: right;
@@ -220,14 +272,15 @@
     align-items: center;
     gap: 1rem;
     flex: 1;
+    color: #59391b;
   }
 
   .creation input {
     font: inherit;
-    color: var(--creme);
-    background: var(--nuit);
-    border: 1px solid rgba(244, 236, 216, 0.25);
-    border-radius: 6px;
+    color: #3c2a12;
+    background: rgba(255, 250, 235, 0.85);
+    border: 1px solid rgba(90, 60, 20, 0.4);
+    border-radius: 4px;
     padding: 0.35rem 0.6rem;
     flex: 1;
   }

@@ -49,6 +49,10 @@ export function statsChapitre(slot: Slot, fiches: FicheSalle[], num: number): St
   };
 }
 
+export function chutesTotales(slot: Slot): number {
+  return Object.values(slot.salles).reduce((somme, salle) => somme + salle.chutes, 0);
+}
+
 export function fraisesTotales(slot: Slot): number {
   return Object.values(slot.salles).filter((salle) => salle.fraise).length;
 }
