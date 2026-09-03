@@ -42,6 +42,18 @@
     volerVers(zoom);
     return () => cancelAnimationFrame(animation);
   });
+
+  // Premier affichage : nuages déjà en place qui se dissipent. Tout
+  // changement d'étape ensuite : nuages qui TRAVERSENT le champ en fondu.
+  // svelte-ignore state_referenced_locally
+  let cleCourante = cle;
+  let modeNuages: 'arrivee' | 'voyage' = $state('arrivee');
+  $effect(() => {
+    if (cle !== cleCourante) {
+      cleCourante = cle;
+      modeNuages = 'voyage';
+    }
+  });
 </script>
 
 <div class="fond" aria-hidden="true">
@@ -63,7 +75,7 @@
   </div>
 
   {#key cle}
-    <Nuages />
+    <Nuages mode={modeNuages} />
   {/key}
 
   <Neige />

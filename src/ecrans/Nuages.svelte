@@ -1,6 +1,11 @@
-<!-- La nappe de nuages : elle couvre la scène à l'arrivée, puis glisse vers
-     le bas et se dissipe en vagues — les montagnes surgissent de derrière. -->
+<!-- La nappe de nuages.
+     Mode « arrivee » : elle couvre déjà la scène et se dissipe (premier
+     affichage). Mode « voyage » : les nuages naissent invisibles près de
+     l'horizon, montent en opacité et traversent le champ — on avance à
+     travers eux, rien ne surgit d'un coup. -->
 <script lang="ts">
+  const { mode = 'arrivee' }: { mode?: 'arrivee' | 'voyage' } = $props();
+
   const nuages = [
     { gauche: -12, haut: 22, largeur: 55, hauteur: 34, retard: 40, dx: -16 },
     { gauche: 18, haut: 10, largeur: 48, hauteur: 26, retard: 0, dx: -6 },
@@ -15,7 +20,7 @@
 
 {#each nuages as nuage, i (i)}
   <span
-    class="nuage"
+    class="nuage {mode}"
     style="left: {nuage.gauche}vw; top: {nuage.haut}vh; width: {nuage.largeur}vw;
       height: {nuage.hauteur}vh; --dx: {nuage.dx}vw; animation-delay: {nuage.retard}ms"
   ></span>
@@ -34,7 +39,14 @@
     filter: blur(26px);
     pointer-events: none;
     z-index: 4;
+  }
+
+  .nuage.arrivee {
     animation: balayage 3.2s cubic-bezier(0.35, 0.55, 0.3, 1) both;
+  }
+
+  .nuage.voyage {
+    animation: traversee 3.4s cubic-bezier(0.35, 0.5, 0.3, 1) both;
   }
 
   @keyframes balayage {
@@ -47,6 +59,20 @@
     }
     100% {
       transform: translate(var(--dx), 42vh) scale(1.35);
+      opacity: 0;
+    }
+  }
+
+  @keyframes traversee {
+    0% {
+      transform: translate(calc(var(--dx) * -0.4), -8vh) scale(0.82);
+      opacity: 0;
+    }
+    35% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translate(var(--dx), 40vh) scale(1.45);
       opacity: 0;
     }
   }
