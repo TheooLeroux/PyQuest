@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Etoiles from './Etoiles.svelte';
   import MontagneLointaine from './MontagneLointaine.svelte';
   import Neige from './Neige.svelte';
 
@@ -24,8 +25,11 @@
 </script>
 
 <div class="fond" aria-hidden="true">
+  <Etoiles />
   <div class="scene" style="--zoom: {zoomCourant}">
-    <MontagneLointaine />
+    <div class="derive">
+      <MontagneLointaine />
+    </div>
   </div>
   <Neige />
 </div>
@@ -56,5 +60,21 @@
     transform: scale(var(--zoom));
     transform-origin: 50% 72%;
     transition: transform 1.6s cubic-bezier(0.16, 0.7, 0.3, 1);
+  }
+
+  /* La lente respiration du décor en idle (la carte a le droit de vivre). */
+  .derive {
+    position: absolute;
+    inset: 0;
+    animation: respiration 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes respiration {
+    from {
+      transform: translateY(0) scale(1);
+    }
+    to {
+      transform: translateY(7px) scale(1.015);
+    }
   }
 </style>

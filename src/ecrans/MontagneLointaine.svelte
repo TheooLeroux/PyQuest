@@ -1,27 +1,89 @@
-<!-- La montagne vue de loin, bleutée dans la nuit — décor des écrans
-     sauvegardes et carte (la version 3D arrivera à l'étape habillage). -->
-<svg viewBox="0 0 600 400" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
-  <!-- crêtes arrière -->
-  <polygon fill="#16283f" points="0,400 110,255 230,400" />
-  <polygon fill="#142438" points="350,400 490,265 600,400" />
-  <!-- le mont -->
-  <polygon fill="#27455e" points="300,42 178,400 428,400" />
-  <polygon fill="#33586f" points="300,42 258,210 300,400 340,180" />
-  <polygon fill="#1f3a52" points="340,180 300,400 428,400" />
-  <!-- glace -->
-  <polygon fill="#4fc8dc" opacity="0.8" points="300,42 288,110 310,120" />
-  <polygon fill="#3fb2c8" opacity="0.7" points="310,120 340,180 326,196 306,150" />
-  <!-- neige du sommet -->
-  <polygon fill="#dfeef2" points="300,42 282,96 300,108 318,90" />
+<script lang="ts">
+  import { genererMontagne } from '../scenes/lowpoly';
+
+  const LARGEUR = 640;
+  const HAUTEUR = 420;
+
+  // Le mont PyQuest — graine fixe : la même montagne à chaque lancement.
+  const principale = genererMontagne({
+    graine: 20180125,
+    largeur: 470,
+    hauteur: 350,
+    lignes: 11,
+    ligneNeige: 0.26,
+    probaGlace: 0.06,
+    palette: {
+      ombre: '#1c3450',
+      lumiere: '#5a87a6',
+      neigeOmbre: '#b7d9e4',
+      neigeLumiere: '#eef7fa',
+      glace: '#56cfe1',
+    },
+  });
+
+  // Les crêtes voisines, plus sombres, mangées par la brume.
+  const paletteCrete = {
+    ombre: '#0f1c30',
+    lumiere: '#24405c',
+    neigeOmbre: '#5d7891',
+    neigeLumiere: '#8fa9bf',
+    glace: '#2e5670',
+  };
+  const creteGauche = genererMontagne({
+    graine: 7,
+    largeur: 360,
+    hauteur: 190,
+    lignes: 6,
+    ligneNeige: 0.14,
+    probaGlace: 0,
+    palette: paletteCrete,
+  });
+  const creteDroite = genererMontagne({
+    graine: 13,
+    largeur: 410,
+    hauteur: 225,
+    lignes: 6,
+    ligneNeige: 0.14,
+    probaGlace: 0,
+    palette: paletteCrete,
+  });
+</script>
+
+<svg viewBox="0 0 {LARGEUR} {HAUTEUR}" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
+  <defs>
+    <linearGradient id="brume-pied" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b0f22" stop-opacity="0" />
+      <stop offset="1" stop-color="#0b0f22" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(140, {HAUTEUR - 190})" opacity="0.55">
+    {#each creteGauche as facette (facette.points)}
+      <polygon points={facette.points} fill={facette.couleur} />
+    {/each}
+  </g>
+  <g transform="translate(505, {HAUTEUR - 225})" opacity="0.5">
+    {#each creteDroite as facette (facette.points)}
+      <polygon points={facette.points} fill={facette.couleur} />
+    {/each}
+  </g>
+
+  <g transform="translate(320, {HAUTEUR - 350})">
+    {#each principale as facette (facette.points)}
+      <polygon points={facette.points} fill={facette.couleur} />
+    {/each}
+  </g>
+
+  <rect x="0" y={HAUTEUR - 80} width={LARGEUR} height="80" fill="url(#brume-pied)" />
 </svg>
 
 <style>
   svg {
     position: absolute;
-    bottom: -4vh;
+    bottom: -3vh;
     left: 50%;
     translate: -50% 0;
-    width: min(110vmin, 85vw);
-    filter: drop-shadow(0 0 40px rgba(79, 200, 220, 0.12));
+    width: min(120vmin, 90vw);
+    filter: drop-shadow(0 0 46px rgba(86, 207, 225, 0.1));
   }
 </style>
