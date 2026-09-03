@@ -46,21 +46,33 @@
   // Écrans joués devant la montagne ; entrer dans l'un d'eux lance les
   // traits de fuite, et le zoom du fond fait le voyage sauvegardes ↔ carte.
   const surLaMontagne = $derived(etat.ecran === 'sauvegardes' || etat.ecran === 'carte');
+  const versLaCarte = $derived(etat.ecran === 'carte' || etat.enVoyage);
   let fuite = $state(false);
   let timerFuite: ReturnType<typeof setTimeout>;
+  let etapePrecedente = '';
   $effect(() => {
+    // Une salve par étape du périple : arrivée aux sauvegardes, départ du
+    // voyage — pas de doublon quand l'écran bascule en plein vol.
+    const etape = versLaCarte ? 'voyage' : etat.ecran;
+    if (etape === etapePrecedente) return;
+    etapePrecedente = etape;
     if (surLaMontagne) {
       fuite = true;
       clearTimeout(timerFuite);
       timerFuite = setTimeout(() => (fuite = false), 950);
     }
   });
+
+  $effect(() => {
+    // Arrivé sur la carte (ou revenu ailleurs), le drapeau de voyage retombe.
+    if (etat.ecran !== 'sauvegardes') etat.enVoyage = false;
+  });
 </script>
 
 <svelte:window onkeydown={relancerMusique} onpointerdown={relancerMusique} />
 
 {#if surLaMontagne}
-  <FondMontagne zoom={etat.ecran === 'carte' ? 1.9 : 1} cle={etat.ecran} />
+  <FondMontagne zoom={versLaCarte ? 1.9 : 1} cle={versLaCarte ? 'carte' : etat.ecran} />
 {/if}
 
 <Ecran />

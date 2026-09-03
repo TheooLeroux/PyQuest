@@ -16,13 +16,22 @@
   let index = $state(0);
   let mode: 'liste' | 'creation' | 'suppression' = $state('liste');
   let nomSaisi = $state('');
+  let depart = $state(false);
+
+  // Le voyage décolle ICI : la caméra et les nuages partent tout de suite,
+  // les tickets s'envolent, puis l'écran bascule en plein vol.
+  function demarrerVoyage() {
+    depart = true;
+    etat.enVoyage = true;
+    setTimeout(() => aller('carte'), 750);
+  }
 
   function ouvrir() {
     const slot = slots[index];
     if (slot) {
       jouerSon('slotOuvrir');
       ouvrirSlot(index + 1, slot);
-      aller('carte');
+      demarrerVoyage();
     } else {
       jouerSon('valider');
       nomSaisi = '';
@@ -36,10 +45,11 @@
     jouerSon('nomAccepte');
     jouerSon('slotOuvrir');
     creerEtOuvrirSlot(index + 1, nom);
-    aller('carte');
+    demarrerVoyage();
   }
 
   function cliquerCarte(i: number) {
+    if (depart) return;
     if (mode === 'suppression' && i === index) {
       jouerSon('slotSupprimer');
       effacerSlot(index + 1);
@@ -53,6 +63,7 @@
   }
 
   function surTouche(e: KeyboardEvent) {
+    if (depart) return; // en plein décollage, on ne pilote plus
     if (mode === 'creation') return; // le champ de saisie gère ses touches
     if (mode === 'suppression') {
       if (e.key === 'Enter') {
@@ -93,7 +104,7 @@
 
 <svelte:window onkeydown={surTouche} />
 
-<main class="ecran">
+<main class="ecran" class:depart>
   <h1>{t('sauvegardes.titre')}</h1>
 
   <div class="tickets">
@@ -153,6 +164,23 @@
     flex-direction: column;
     gap: 1.3rem;
     width: min(38rem, 92vw);
+  }
+
+  /* Au décollage, tout s'envole : dépassé par la caméra qui avance. */
+  .depart .ticket {
+    animation: envol 0.65s ease-in both;
+  }
+
+  .depart h1,
+  .depart .aide {
+    animation: envol 0.5s ease-in both;
+  }
+
+  @keyframes envol {
+    to {
+      opacity: 0;
+      transform: translateY(48px) scale(1.08);
+    }
   }
 
   /* Chaque ticket arrive en cascade, après le début du zoom du fond. */

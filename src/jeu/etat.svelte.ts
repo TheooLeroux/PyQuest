@@ -10,6 +10,8 @@ export const etat = $state({
   // Mémoire de l'écran titre : revenir des Options ramène au menu, pas au logo.
   phaseTitre: 'logo' as 'logo' | 'menu',
   indexTitre: 0,
+  // Le voyage vers la carte démarre AVANT de quitter l'écran des sauvegardes.
+  enVoyage: false,
   reglages: chargerReglages(localStorage),
 });
 
