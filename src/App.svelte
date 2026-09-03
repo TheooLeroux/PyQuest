@@ -1,6 +1,8 @@
 <script lang="ts">
   import { etat } from './jeu/etat.svelte';
   import { jouerMusiqueTitre, mettreMusiqueEnPause, reglerVolumeMusique } from './jeu/musique';
+  import FondMontagne from './ecrans/FondMontagne.svelte';
+  import TraitsDeFuite from './ecrans/TraitsDeFuite.svelte';
   import Titre from './ecrans/Titre.svelte';
   import Sauvegardes from './ecrans/Sauvegardes.svelte';
   import Options from './ecrans/Options.svelte';
@@ -40,8 +42,29 @@
   function relancerMusique() {
     if (etat.ecran !== 'salle') jouerMusiqueTitre(etat.reglages.volumeMusique);
   }
+
+  // Écrans joués devant la montagne ; entrer dans l'un d'eux lance les
+  // traits de fuite, et le zoom du fond fait le voyage sauvegardes ↔ carte.
+  const surLaMontagne = $derived(etat.ecran === 'sauvegardes' || etat.ecran === 'carte');
+  let fuite = $state(false);
+  let timerFuite: ReturnType<typeof setTimeout>;
+  $effect(() => {
+    if (surLaMontagne) {
+      fuite = true;
+      clearTimeout(timerFuite);
+      timerFuite = setTimeout(() => (fuite = false), 600);
+    }
+  });
 </script>
 
 <svelte:window onkeydown={relancerMusique} onpointerdown={relancerMusique} />
 
+{#if surLaMontagne}
+  <FondMontagne zoom={etat.ecran === 'carte' ? 2.2 : 1} />
+{/if}
+
 <Ecran />
+
+{#if surLaMontagne && fuite}
+  <TraitsDeFuite />
+{/if}
