@@ -14,8 +14,21 @@ export default defineConfig({
   server: {
     headers: entetesIsolation,
     // Projet sur /mnt/c (Windows) : WSL ne reçoit pas les notifications de
-    // fichiers — sans sondage, Vite sert des modules périmés.
-    watch: { usePolling: true, interval: 300 },
+    // fichiers — sans sondage, Vite sert des modules périmés. Le sondage
+    // ignore les dossiers lourds, sinon il étrangle le serveur.
+    watch: {
+      usePolling: true,
+      interval: 400,
+      ignored: [
+        '**/node_modules/**',
+        '**/public/pyodide/**',
+        '**/public/musiques/**',
+        '**/captures-tmp/**',
+        '**/assets-bruts/**',
+        '**/.venv-sons/**',
+        '**/dist/**',
+      ],
+    },
   },
   preview: { headers: entetesIsolation },
   worker: { format: 'es' },
