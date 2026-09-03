@@ -1,18 +1,17 @@
 <script lang="ts">
-  import type { PlanChaine } from '../scenes/chaine';
+  import { HAUTEUR_SCENE, LARGEUR_SCENE, type PlanChaine } from '../scenes/chaine';
 
   const { plan }: { plan: PlanChaine } = $props();
-  const HAUTEUR = 420;
 </script>
 
 <svg
-  viewBox="0 0 1600 420"
+  viewBox="0 0 {LARGEUR_SCENE} {HAUTEUR_SCENE}"
   aria-hidden="true"
   preserveAspectRatio="xMidYMax slice"
   style="opacity: {plan.opacite}"
 >
   {#each plan.sommets as sommet (sommet.x)}
-    <g transform="translate({sommet.x}, {HAUTEUR - sommet.hauteur})">
+    <g transform="translate({sommet.x}, {HAUTEUR_SCENE - sommet.hauteur})">
       {#each sommet.facettes as facette (facette.points)}
         <polygon points={facette.points} fill={facette.couleur} />
       {/each}

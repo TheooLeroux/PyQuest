@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
+  import { camera, poserCamera, volerVers } from '../jeu/camera.svelte';
   import { PLANS } from '../scenes/chaine';
   import Etoiles from './Etoiles.svelte';
   import Neige from './Neige.svelte';
@@ -11,36 +11,12 @@
   // fait DANS le massif. `cle` rejoue la nappe de nuages à chaque étape.
   const { zoom = 1, cle = '' }: { zoom?: number; cle?: string } = $props();
 
-  const DUREE_VOYAGE_MS = 4200;
-
-  // Au montage, la caméra part de loin (68 %) puis vole vers sa place.
+  // Au montage, la caméra part de loin (72 %) puis vole vers sa place.
   // svelte-ignore state_referenced_locally
-  let zoomCourant = $state(zoom * 0.68);
-  let animation = 0;
-
-  // Départ doux → croisière visible → atterrissage doux : c'est le mouvement
-  // entretenu qui donne l'impression de voyage (une transition CSS qui avale
-  // 85 % du trajet en quelques frames se lit comme un « pop »).
-  function easeInOutCubic(p: number): number {
-    return p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
-  }
-
-  function volerVers(cible: number): void {
-    const depart = untrack(() => zoomCourant);
-    if (Math.abs(cible - depart) < 0.001) return;
-    cancelAnimationFrame(animation);
-    const debut = performance.now();
-    const pas = (instant: number) => {
-      const progres = Math.min(1, (instant - debut) / DUREE_VOYAGE_MS);
-      zoomCourant = depart + (cible - depart) * easeInOutCubic(progres);
-      if (progres < 1) animation = requestAnimationFrame(pas);
-    };
-    animation = requestAnimationFrame(pas);
-  }
+  poserCamera(zoom * 0.72);
 
   $effect(() => {
     volerVers(zoom);
-    return () => cancelAnimationFrame(animation);
   });
 
   // Premier affichage : nuages déjà en place qui se dissipent. Tout
@@ -61,7 +37,7 @@
 
   <div class="massif">
     {#each PLANS as plan, i (i)}
-      <div class="plan" style="--facteur: {plan.facteur}; --zoom: {zoomCourant}">
+      <div class="plan" style="--facteur: {plan.facteur}; --zoom: {camera.zoom}">
         <div class="derive" style="animation-delay: {i * -6}s">
           <PlanMontagnes {plan} />
         </div>

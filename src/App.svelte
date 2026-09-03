@@ -72,7 +72,7 @@
 <svelte:window onkeydown={relancerMusique} onpointerdown={relancerMusique} />
 
 {#if surLaMontagne}
-  <FondMontagne zoom={versLaCarte ? 1.9 : 1} cle={versLaCarte ? 'carte' : etat.ecran} />
+  <FondMontagne zoom={versLaCarte ? 1.22 : 1} cle={versLaCarte ? 'carte' : etat.ecran} />
 {/if}
 
 <Ecran />
