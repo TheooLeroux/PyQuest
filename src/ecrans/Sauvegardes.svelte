@@ -112,8 +112,8 @@
           class="ticket"
           class:actif={i === index}
           class:danger={mode === 'suppression' && i === index}
-          style="--angle: {i === index ? 0 : i % 2 === 0 ? -0.8 : 0.7}deg; --retard: {250 +
-            i * 90}ms"
+          style="--angle: {i === index ? 0 : i % 2 === 0 ? -0.8 : 0.7}deg; --retard: {650 +
+            i * 110}ms"
           onclick={() => cliquerCarte(i)}
         >
           <span class="photo"><span class="scotch"></span>{i + 1}</span>

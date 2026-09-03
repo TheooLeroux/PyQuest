@@ -98,7 +98,7 @@
   .grimpeur,
   .chapitres,
   .aide {
-    animation: arrivee 0.5s ease-out 0.45s both;
+    animation: arrivee 0.6s ease-out 0.8s both;
   }
 
   @keyframes arrivee {
