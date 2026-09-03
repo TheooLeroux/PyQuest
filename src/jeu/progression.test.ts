@@ -46,7 +46,7 @@ describe('progression', () => {
     const slot = slotAvecValidees(['00_01', '00_02']);
     slot.salles['00_01'].chutes = 3;
     const stats = statsChapitre(slot, fiches, 0);
-    expect(stats).toEqual({ validees: 2, total: 3, chutes: 3 });
+    expect(stats).toEqual({ validees: 2, total: 3, chutes: 3, fraises: 0, tempsSec: 0 });
     expect(pourcentageAscension(slot, fiches)).toBe(Math.round((2 / fiches.length) * 100));
   });
 });

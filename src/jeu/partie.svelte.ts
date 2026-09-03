@@ -1,5 +1,4 @@
 // La partie en cours : quel slot est ouvert, dans quelle salle on se trouve.
-import { fiches } from '../contenu/catalogue';
 import {
   chargerSlots,
   creerSlot,
@@ -9,7 +8,6 @@ import {
   type EtatSalle,
   type Slot,
 } from '../stockage/slots';
-import { prochaineSalle } from './progression';
 
 export const partie = $state({
   numeroSlot: 0, // 1 à 3, 0 = aucun
@@ -52,10 +50,8 @@ export function etatSalle(idSalle: string): EtatSalle {
   return slot.salles[idSalle];
 }
 
-export function entrerDansChapitre(num: number): void {
-  const salle = prochaineSalle(partie.slot!, fiches, num);
-  if (!salle) return;
-  partie.salleId = salle.id;
-  partie.slot!.positionSalle = salle.id;
+export function lancerSalle(idSalle: string): void {
+  partie.salleId = idSalle;
+  partie.slot!.positionSalle = idSalle;
   enregistrerPartie();
 }

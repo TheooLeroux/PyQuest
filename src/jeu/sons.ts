@@ -18,6 +18,9 @@ const FICHIERS = {
   carteDroite: 'ui_world_icon_roll_right',
   carteChoisir: 'ui_world_icon_select',
   carteRetour: 'ui_world_chapter_back',
+  vignetteOuvrir: 'ui_world_chapter_pane_expand',
+  vignetteFermer: 'ui_world_chapter_pane_contract',
+  gravir: 'ui_world_chapter_checkpoint_start',
   pause: 'ui_game_pause',
   reprise: 'ui_game_unpause',
 } as const;

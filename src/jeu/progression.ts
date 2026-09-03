@@ -38,6 +38,8 @@ export interface StatsChapitre {
   validees: number;
   total: number;
   chutes: number;
+  fraises: number;
+  tempsSec: number;
 }
 
 export function statsChapitre(slot: Slot, fiches: FicheSalle[], num: number): StatsChapitre {
@@ -46,6 +48,8 @@ export function statsChapitre(slot: Slot, fiches: FicheSalle[], num: number): St
     validees: salles.filter((salle) => salleValidee(slot, salle.id)).length,
     total: salles.length,
     chutes: salles.reduce((somme, salle) => somme + (slot.salles[salle.id]?.chutes ?? 0), 0),
+    fraises: salles.filter((salle) => slot.salles[salle.id]?.fraise).length,
+    tempsSec: salles.reduce((somme, salle) => somme + (slot.salles[salle.id]?.tempsSec ?? 0), 0),
   };
 }
 
