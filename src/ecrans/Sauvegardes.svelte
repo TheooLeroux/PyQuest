@@ -1,8 +1,9 @@
 <script lang="ts">
   import { fiches } from '../contenu/catalogue';
-  import { aller, retour, t } from '../jeu/etat.svelte';
+  import { formaterDate, formaterDuree } from '../jeu/affichage';
+  import { aller, etat, retour, t } from '../jeu/etat.svelte';
   import { creerEtOuvrirSlot, effacerSlot, listerSlots, ouvrirSlot } from '../jeu/partie.svelte';
-  import { pourcentageAscension } from '../jeu/progression';
+  import { fraisesTotales, pourcentageAscension, tempsTotalSec } from '../jeu/progression';
   import { jouerSon } from '../jeu/sons';
   import { NOMBRE_SLOTS } from '../stockage/slots';
 
@@ -31,6 +32,19 @@
     jouerSon('slotOuvrir');
     creerEtOuvrirSlot(index + 1, nom);
     aller('carte');
+  }
+
+  function cliquerCarte(i: number) {
+    if (mode === 'suppression' && i === index) {
+      jouerSon('slotSupprimer');
+      effacerSlot(index + 1);
+      slots = listerSlots();
+      mode = 'liste';
+      return;
+    }
+    mode = 'liste';
+    index = i;
+    ouvrir();
   }
 
   function surTouche(e: KeyboardEvent) {
@@ -76,59 +90,145 @@
 
 <main class="ecran">
   <h1>{t('sauvegardes.titre')}</h1>
-  <ul class="menu panneau">
+
+  <div class="cartes">
     {#each slots as slot, i (i)}
-      <li class={i === index ? 'actif' : ''}>
+      {#if mode === 'creation' && i === index && !slot}
+        <div class="carte active creation">
+          <span class="numero">{i + 1}</span>
+          <label>
+            {t('sauvegardes.nomQuestion')}
+            <!-- svelte-ignore a11y_autofocus -->
+            <input autofocus maxlength="20" bind:value={nomSaisi} onkeydown={surToucheSaisie} />
+          </label>
+        </div>
+      {:else}
         <button
-          onclick={() => {
-            index = i;
-            ouvrir();
-          }}
+          class="carte"
+          class:active={i === index}
+          class:danger={mode === 'suppression' && i === index}
+          onclick={() => cliquerCarte(i)}
         >
+          <span class="numero">{i + 1}</span>
           {#if slot}
-            {i + 1} · {slot.nom} — {pourcentageAscension(slot, fiches)} %
+            <span class="contenu">
+              <span class="nom">{slot.nom}</span>
+              <span class="stats">
+                ⚑ {pourcentageAscension(slot, fiches)} % · 🍓 {fraisesTotales(slot)} · ⏱
+                {formaterDuree(tempsTotalSec(slot))}
+              </span>
+            </span>
             {#if mode === 'suppression' && i === index}
-              <span class="danger">{t('sauvegardes.confirmerSuppression')}</span>
+              <span class="alerte">{t('sauvegardes.confirmerSuppression')}</span>
+            {:else}
+              <span class="date">{formaterDate(slot.dernierJeuLe, etat.reglages.langue)}</span>
             {/if}
           {:else}
-            {i + 1} · {t('sauvegardes.slotVide')}
+            <span class="contenu">
+              <span class="vide">{t('sauvegardes.slotVide')}</span>
+            </span>
           {/if}
         </button>
-      </li>
+      {/if}
     {/each}
-  </ul>
-
-  {#if mode === 'creation'}
-    <div class="panneau saisie">
-      <label>
-        {t('sauvegardes.nomQuestion')}
-        <!-- svelte-ignore a11y_autofocus -->
-        <input autofocus maxlength="20" bind:value={nomSaisi} onkeydown={surToucheSaisie} />
-      </label>
-    </div>
-  {/if}
+  </div>
 
   <p class="aide">{t('sauvegardes.aide')}</p>
 </main>
 
 <style>
-  .danger {
-    color: var(--rose);
-    margin-left: 1rem;
-  }
-
-  .saisie label {
+  .cartes {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
-    align-items: center;
+    width: min(36rem, 92vw);
   }
 
-  .saisie input {
+  .carte {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: rgba(26, 26, 46, 0.75);
+    border: 1px solid rgba(244, 236, 216, 0.12);
+    border-radius: 10px;
+    padding: 1.1rem 1.5rem;
+    min-height: 4.6rem;
+    transition:
+      border-color 0.12s,
+      transform 0.12s;
+  }
+
+  .carte.active {
+    border-color: var(--rose);
+    box-shadow: 0 0 18px rgba(224, 76, 106, 0.18);
+    transform: translateX(0.4rem);
+  }
+
+  .carte.danger {
+    border-color: var(--rose);
+    background: rgba(224, 76, 106, 0.16);
+  }
+
+  .numero {
+    font-size: 1.5em;
+    opacity: 0.45;
+    min-width: 1.4rem;
+    text-align: center;
+  }
+
+  .contenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+  }
+
+  .nom {
+    font-size: 1.25em;
+    letter-spacing: 0.05em;
+  }
+
+  .stats {
+    opacity: 0.8;
+    font-size: 0.9em;
+    color: var(--cyan);
+  }
+
+  .vide {
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .date {
+    opacity: 0.5;
+    font-size: 0.85em;
+  }
+
+  .alerte {
+    color: var(--rose);
+    font-size: 0.9em;
+    max-width: 11rem;
+    text-align: right;
+  }
+
+  .creation label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .creation input {
     font: inherit;
     color: var(--creme);
     background: var(--nuit);
     border: 1px solid rgba(244, 236, 216, 0.25);
     border-radius: 6px;
     padding: 0.35rem 0.6rem;
+    flex: 1;
   }
 </style>

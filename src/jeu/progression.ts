@@ -49,6 +49,14 @@ export function statsChapitre(slot: Slot, fiches: FicheSalle[], num: number): St
   };
 }
 
+export function fraisesTotales(slot: Slot): number {
+  return Object.values(slot.salles).filter((salle) => salle.fraise).length;
+}
+
+export function tempsTotalSec(slot: Slot): number {
+  return Object.values(slot.salles).reduce((somme, salle) => somme + salle.tempsSec, 0);
+}
+
 /** Pourcentage d'ascension du slot, calculé — jamais stocké (DONNEES.md). */
 export function pourcentageAscension(slot: Slot, fiches: FicheSalle[]): number {
   if (fiches.length === 0) return 0;
