@@ -64,11 +64,14 @@
     rendu.setSize(largeur(), hauteur());
     conteneur.appendChild(rendu.domElement);
 
-    // Lumières : nuit froide, lune haut-gauche.
-    scene.add(new THREE.HemisphereLight(0x5d7ab0, 0x151d30, 0.75));
-    const lune = new THREE.DirectionalLight(0xdce8ff, 1.15);
+    // Lumières : nuit froide mais lisible — lune haut-gauche + remplissage.
+    scene.add(new THREE.HemisphereLight(0x6d8cc4, 0x1c2740, 1.15));
+    const lune = new THREE.DirectionalLight(0xdce8ff, 1.7);
     lune.position.set(-35, 60, 25);
     scene.add(lune);
+    const remplissage = new THREE.DirectionalLight(0x88a8d8, 0.5);
+    remplissage.position.set(40, 20, -30);
+    scene.add(remplissage);
 
     const matiereMont = new THREE.MeshStandardMaterial({
       vertexColors: true,
@@ -166,6 +169,8 @@
     // Drapeaux aux ancres + zones cliquables.
     const ancres = calculerAncres();
     const fanions: THREE.Mesh[] = [];
+    const mats: THREE.Mesh[] = [];
+    const groupes: THREE.Group[] = [];
     const zones: THREE.Mesh[] = [];
     for (const [num, ancre] of ancres.entries()) {
       const groupe = new THREE.Group();
@@ -173,10 +178,11 @@
 
       const mat = new THREE.Mesh(
         new THREE.CylinderGeometry(0.09, 0.09, 2.4, 6),
-        new THREE.MeshStandardMaterial({ color: 0xe8e0cc, roughness: 1 }),
+        new THREE.MeshBasicMaterial({ color: 0xd8d0c0 }),
       );
       mat.position.y = 1.2;
       groupe.add(mat);
+      mats.push(mat);
 
       const geoFanion = new THREE.BufferGeometry();
       geoFanion.setAttribute(
@@ -184,13 +190,10 @@
         new THREE.Float32BufferAttribute([0, 2.4, 0, 1.35, 2.05, 0, 0, 1.7, 0], 3),
       );
       geoFanion.computeVertexNormals();
+      // Matériau non éclairé : la couleur du fanion reste franche, même de nuit.
       const fanion = new THREE.Mesh(
         geoFanion,
-        new THREE.MeshStandardMaterial({
-          color: COULEURS.ouvert,
-          roughness: 1,
-          side: THREE.DoubleSide,
-        }),
+        new THREE.MeshBasicMaterial({ color: COULEURS.ouvert, side: THREE.DoubleSide }),
       );
       fanion.userData.num = num;
       groupe.add(fanion);
@@ -208,6 +211,7 @@
       // Le fanion regarde vers l'extérieur du mont.
       groupe.rotation.y = -ancre.angle + Math.PI;
       scene.add(groupe);
+      groupes.push(groupe);
     }
 
     // Le pin de Madeline au palier courant (billboard doré, cœur rose).
@@ -218,14 +222,15 @@
     scene.add(pin);
 
     recolorer = () => {
-      for (const fanion of fanions) {
-        const num = fanion.userData.num as number;
-        const materiau = fanion.material as THREE.MeshStandardMaterial;
-        materiau.color.set(
+      for (const [num, fanion] of fanions.entries()) {
+        const verrou = (etats[num] ?? 'verrouille') === 'verrouille';
+        (fanion.material as THREE.MeshBasicMaterial).color.set(
           num === cibleSelection ? COULEUR_SELECTION : COULEURS[etats[num] ?? 'verrouille'],
         );
-        fanion.visible = etats[num] !== 'verrouille' || num <= cibleSelection + 2;
-        (fanion.parent as THREE.Group).visible = true;
+        // Chapitre verrouillé : tout le repère s'éteint (mât compris), on le
+        // devine dans la nuit sans qu'il brille.
+        (mats[num].material as THREE.MeshBasicMaterial).color.set(verrou ? 0x33465c : 0xd8d0c0);
+        groupes[num].scale.setScalar(num === cibleSelection ? 1.5 : 1);
       }
       const ancre = ancres[untrack(() => courant)] ?? ancres[0];
       pin.position.set(ancre.position.x, ancre.position.y + 3.4, ancre.position.z);
@@ -235,10 +240,10 @@
     // ——— La caméra sur rails ———
     // Pose de rails d'un chapitre : en orbite face à son ancre.
     const poseRails = (ancre: (typeof ancres)[number]) => ({
-      angle: ancre.angle + 0.55,
-      y: ancre.t * HAUTEUR_MONT + 6.5,
-      dist: rayonProfil(ancre.t) + 16,
-      viseY: ancre.t * HAUTEUR_MONT + 1.2,
+      angle: ancre.angle + 0.32,
+      y: ancre.t * HAUTEUR_MONT + 10,
+      dist: rayonProfil(ancre.t) + 24,
+      viseY: ancre.t * HAUTEUR_MONT + 3,
     });
 
     // L'arrivée : la caméra démarre haut au-dessus du massif, derrière les
@@ -382,6 +387,24 @@
 
   const RAYON_SOL_SAPINS = 30;
 
+  let textureParticule: THREE.CanvasTexture | null = null;
+
+  /** Disque doux pour les particules — sinon les points sont des carrés. */
+  function obtenirTextureParticule(): THREE.CanvasTexture {
+    if (textureParticule) return textureParticule;
+    const toile = document.createElement('canvas');
+    toile.width = toile.height = 32;
+    const contexte = toile.getContext('2d')!;
+    const degrade = contexte.createRadialGradient(16, 16, 2, 16, 16, 15);
+    degrade.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    degrade.addColorStop(0.7, 'rgba(255, 255, 255, 0.55)');
+    degrade.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    contexte.fillStyle = degrade;
+    contexte.fillRect(0, 0, 32, 32);
+    textureParticule = new THREE.CanvasTexture(toile);
+    return textureParticule;
+  }
+
   function creerPoints(
     nombre: number,
     position: () => [number, number, number],
@@ -397,6 +420,7 @@
       new THREE.PointsMaterial({
         color: 0xffffff,
         size: taille,
+        map: obtenirTextureParticule(),
         transparent: true,
         opacity: opacite,
         depthWrite: false,

@@ -21,3 +21,6 @@ assets-bruts/
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+
+# Captures de vérification visuelle (outil scripts/capture-carte.mjs)
+captures-tmp/
