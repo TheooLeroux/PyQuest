@@ -11,7 +11,12 @@ const entetesIsolation = {
 
 export default defineConfig({
   plugins: [svelte()],
-  server: { headers: entetesIsolation },
+  server: {
+    headers: entetesIsolation,
+    // Projet sur /mnt/c (Windows) : WSL ne reçoit pas les notifications de
+    // fichiers — sans sondage, Vite sert des modules périmés.
+    watch: { usePolling: true, interval: 300 },
+  },
   preview: { headers: entetesIsolation },
   worker: { format: 'es' },
   optimizeDeps: { exclude: ['pyodide'] },
